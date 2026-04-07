@@ -479,17 +479,19 @@ function Utils.Performance.debounce(fn, delay)
     })
 
     -- tick() debe llamarse en el game loop con el dt actual para que funcione
+    local _unpack = table.unpack or unpack
+
     function debounced:tick()
         if self._pending and (os.clock() - last_call) >= delay_s then
             self._pending = false
-            fn(table.unpack(self._args or {}))
+            fn(_unpack(self._args or {}))
         end
     end
 
     function debounced:flush()
         if self._pending then
             self._pending = false
-            fn(table.unpack(self._args or {}))
+            fn(_unpack(self._args or {}))
         end
     end
 

@@ -26,6 +26,13 @@ local function normalizeKeyState(state)
     return state
 end
 
+local function nowMs()
+    if type(getTickCount) == "function" then
+        return getTickCount()
+    end
+    return math.floor(os.clock() * 1000)
+end
+
 -- ============================================================================
 -- ALGORITMO HIT-TESTING
 -- ============================================================================
@@ -94,7 +101,8 @@ function InteractionManager.handleMouseButton(root, button, state, x, y)
         InteractionManager._pressed = target
         if target then
             -- Gestionar FOCO
-            if target ~= InteractionManager._focused then
+            local shouldFocus = target.isFocusable and target:isFocusable()
+            if shouldFocus and target ~= InteractionManager._focused then
                 if InteractionManager._focused then 
                     dispatch(InteractionManager._focused, "blur")
                     if InteractionManager._focused.onBlur then
@@ -126,11 +134,11 @@ function InteractionManager.handleMouseButton(root, button, state, x, y)
 
             -- Si es el mismo que se presionó, disparar CLICK
             if target == InteractionManager._pressed then
-                local now = os.clock()
+                local now = nowMs()
                 dispatch(target, "click", { button = button, x = x, y = y })
                 
                 -- Doble clic (umbral de 300ms)
-                if target == InteractionManager._last_click_target and (now - InteractionManager._last_click_time) < 0.3 then
+                if target == InteractionManager._last_click_target and (now - InteractionManager._last_click_time) < 300 then
                     dispatch(target, "dblclick", { button = button, x = x, y = y })
                 end
                 
@@ -189,7 +197,11 @@ function InteractionManager.handleKeyboardKey(root, key, state)
     
     -- Interceptar TAB para navegación
     if key == "tab" then
-        InteractionManager._navigateTab(root, getKeyState("lshift") or getKeyState("rshift"))
+        local shiftPressed = false
+        if type(getKeyState) == "function" then
+            shiftPressed = getKeyState("lshift") or getKeyState("rshift")
+        end
+        InteractionManager._navigateTab(root, shiftPressed)
         return true
     end
     

@@ -1,5 +1,5 @@
 -- src/parser/css_parser.lua
--- Módulo parseador de CSS 100% nativo para Lua 5.3+
+-- Módulo parseador de CSS 100% nativo para Lua 5.1+.
 
 local css_parser = {}
 

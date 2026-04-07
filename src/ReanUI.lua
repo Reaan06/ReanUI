@@ -30,6 +30,13 @@ local _global_styles = {} -- { [selector] = { props } }
 local _root = nil
 local _renderer = Renderer.new()
 local _canvas = nil -- Se inicializa en ReanUI.init()
+local _host_bound = false
+local _last_tick_ms = nil
+local _host_root = nil
+local _handler_render = nil
+local _handler_key = nil
+local _handler_char = nil
+local _handler_restore = nil
 
 -- Mapeo de tags a clases de componentes
 local _component_map = {
@@ -41,6 +48,26 @@ local _component_map = {
     input    = Input,
     scrollbox = Scrollbox,
 }
+
+local function nowMs()
+    if type(getTickCount) == "function" then
+        return getTickCount()
+    end
+    return math.floor(os.clock() * 1000)
+end
+
+local function computeDeltaSeconds()
+    local now = nowMs()
+    if not _last_tick_ms then
+        _last_tick_ms = now
+        return 1 / 60
+    end
+    local dt_ms = now - _last_tick_ms
+    _last_tick_ms = now
+    if dt_ms < 0 then dt_ms = 0 end
+    if dt_ms > 250 then dt_ms = 250 end
+    return dt_ms / 1000
+end
 
 -- ============================================================================
 -- GESTIÓN DE ESTILOS
@@ -161,29 +188,33 @@ function ReanUI.init(width, height, postGUI)
     _root:setStyle("height", height)
     _root:setStyle("padding", "0px")
     
-    -- Autovinculado al render de MTA si existe
-    if addEventHandler then
-        addEventHandler("onClientRender", root, function()
-            local dt = 1/60 -- Aproximado o calcular real
-            ReanUI.update(nil, nil, dt)
-        end)
-        
-        -- Teclado y Caracteres
-        addEventHandler("onClientKey", root, function(key, state)
-            ReanUI.handleKeyboardEvent("key", key, state)
-        end)
-        addEventHandler("onClientCharacter", root, function(char)
-            ReanUI.handleCharacterEvent(char)
-        end)
-        
-        -- Recuperación de recursos de MTA (Shaders, RTs)
-        addEventHandler("onClientRestore", root, function()
-            local ShaderManager = require("src.shaders.ShaderManager")
-            ShaderManager.clearCache()
-            if _canvas and _canvas.onClientRestore then
-                _canvas:onClientRestore()
+    -- Autovinculado al render de MTA si existe (evita duplicar handlers entre reinits)
+    if type(addEventHandler) == "function" and _G.root then
+        _host_root = _G.root
+        if not _host_bound then
+            _handler_render = function()
+                ReanUI.update(nil, nil, computeDeltaSeconds())
             end
-        end)
+            _handler_key = function(key, state)
+                ReanUI.handleKeyboardEvent("key", key, state)
+            end
+            _handler_char = function(char)
+                ReanUI.handleCharacterEvent(char)
+            end
+            _handler_restore = function()
+                local ShaderManager = require("src.shaders.ShaderManager")
+                ShaderManager.clearCache()
+                if _canvas and _canvas.onClientRestore then
+                    _canvas:onClientRestore()
+                end
+            end
+
+            addEventHandler("onClientRender", _host_root, _handler_render)
+            addEventHandler("onClientKey", _host_root, _handler_key)
+            addEventHandler("onClientCharacter", _host_root, _handler_char)
+            addEventHandler("onClientRestore", _host_root, _handler_restore)
+            _host_bound = true
+        end
     end
     
     return _root
@@ -222,6 +253,31 @@ function ReanUI.update(width, height, dt)
     _renderer:render(_root, _canvas)
     
     return _root
+end
+
+--- Libera handlers del host y recursos asociados al canvas.
+--- Útil en debugging, reload de recursos o pruebas de integración.
+function ReanUI.shutdown()
+    if _host_bound and type(removeEventHandler) == "function" and _host_root then
+        if _handler_render then removeEventHandler("onClientRender", _host_root, _handler_render) end
+        if _handler_key then removeEventHandler("onClientKey", _host_root, _handler_key) end
+        if _handler_char then removeEventHandler("onClientCharacter", _host_root, _handler_char) end
+        if _handler_restore then removeEventHandler("onClientRestore", _host_root, _handler_restore) end
+    end
+
+    _host_bound = false
+    _last_tick_ms = nil
+    _host_root = nil
+    _handler_render = nil
+    _handler_key = nil
+    _handler_char = nil
+    _handler_restore = nil
+
+    if _canvas and _canvas.destroy then
+        _canvas:destroy()
+    end
+    _canvas = nil
+    _root = nil
 end
 
 -- ============================================================================

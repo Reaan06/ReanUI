@@ -1,0 +1,22 @@
+<meta>
+    <info author="ReanUI" version="0.1.0" type="script" name="ReanUI" description="Modern UI library for MTA:SA (Lua-only runtime)" />
+
+    <script src="src/**/*.lua" type="client" cache="false" />
+    <script src="export_render.lua" type="client" cache="false" />
+    <script src="main_demo.lua" type="client" cache="false" />
+    <script src="demo_client.lua" type="client" cache="false" />
+
+    <file src="assets/shaders/rounded_rect.fx" />
+    <file src="assets/shaders/blur.fx" />
+
+    <export function="init" type="client" />
+    <export function="createElement" type="client" />
+    <export function="create" type="client" />
+    <export function="loadStyle" type="client" />
+    <export function="setTheme" type="client" />
+    <export function="update" type="client" />
+    <export function="handleMouseEvent" type="client" />
+    <export function="handleKeyboardEvent" type="client" />
+    <export function="handleCharacterEvent" type="client" />
+    <export function="animate" type="client" />
+</meta>
