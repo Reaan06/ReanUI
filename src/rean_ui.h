@@ -6,24 +6,40 @@
 #include <lualib.h>
 #include <stdint.h>
 
-// Estructura interna C (DOM Node optimizado)
-typedef struct {
+// Pre-declaración para auto-referenciar la jerarquía
+typedef struct ReanElement ReanElement;
+
+// Estructura interna C (Box Model DOM Node)
+struct ReanElement {
     int id;
     
-    // Optimizaciones: Uso de primitivas nativas en lugar de arrays de chars
+    // Layout Inicial (Directivas del CSS pre-computadas)
     float width;
     float height;
+    uint8_t width_is_percent;  // Flag optimizada (1 = % , 0 = px)
+    uint8_t height_is_percent; // Flag optimizada (1 = % , 0 = px)
     uint32_t bg_color;
     
+    // Resultados del Motor Layout (Coordenadas de dibujado finales, ultra rápidas pre-frame)
+    float computed_x;
+    float computed_y;
+    float computed_width;
+    float computed_height;
+    
+    // Relación de parentesco
+    ReanElement* parent;
+    ReanElement** children; // Arreglo Dinámico contiguo amigable en caché
+    int num_children;
+    int cap_children;
+    
     int is_managed_by_lua;
-} ReanElement;
+};
 
 // Interface Userdata
 typedef struct {
     ReanElement* element;
 } ReanUserData;
 
-// Macro de exportación estricta
 #ifdef _WIN32
   #define REAN_API __declspec(dllexport)
 #else
