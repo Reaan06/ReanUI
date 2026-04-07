@@ -102,6 +102,44 @@ lua tests/test_event_propagation.lua
 lua tests/test_renderer_perf.lua
 ```
 
+## 🎮 Instalación como Recurso MTA:SA
+
+ReanUI está diseñado para ser usado directamente como un recurso en **Multi Theft Auto: San Andreas**. Sigue estos pasos para integrarlo en tu servidor:
+
+### 1. Preparar el Recurso
+Copia la carpeta raíz de **ReanUI** en el directorio de recursos de tu servidor:
+`server/mods/deathmatch/resources/[interfaz]/reanui/`
+
+### 2. Configurar el meta.xml
+El archivo `meta.xml` ya viene preconfigurado en la raíz. Si deseas integrar ReanUI dentro de otro recurso, asegúrate de incluir los scripts del núcleo en el orden correcto (ver `meta.xml` de referencia).
+
+### 3. Uso Básico (Client-side)
+```lua
+-- En tu script cliente de MTA:
+local sw, sh = getScreenSize()
+local root = ReanUI.init(sw, sh)
+
+-- Carga un estilo CSS externo
+local file = fileOpen("stylesheet.css")
+if file then
+    local css = fileRead(file, fileGetSize(file))
+    fileClose(file)
+    pcall(function() ReanUI.loadStyle(css) end)
+end
+
+-- Crea y añade un elemento usando las clases de estilo
+local btn = ReanUI.create("button", { class = "btn-primary" }, "¡Hola MTA Glassmorphism!")
+root:appendChild(btn)
+```
+
+## 🧪 Ejecución de Tests y Demos (Glassmorphism)
+
+ReanUI incluye una demo interactiva para MTA con un diseño **Glassmorphism Premium** que puedes iniciar inmediatamente:
+
+1.  Asegúrate de que la carpeta del recurso se llame `reanui`.
+2.  En la consola de comandos de MTA (F8) o del servidor, escribe: `start reanui`.
+3.  Verás una interfaz moderna en el centro de tu pantalla, que incluye un panel translúcido, campos de texto interactivos, botones reactivos y efectos de shader de desenfoque de fondo en tiempo real.
+
 ## 🤝 Contribución
 
 Las contribuciones son bienvenidas. Asegúrate de que tu código siga los estándares de documentación inline (LDoc) y que todos los tests pasen antes de enviar un Pull Request.

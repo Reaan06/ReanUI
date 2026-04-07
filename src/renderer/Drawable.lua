@@ -10,7 +10,9 @@ function Drawable.new(type, data)
         data = data or {},
         z_index = 0,
         opacity = 1.0,
-        clip = nil -- {x, y, w, h}
+        clip = nil, -- {x, y, w, h}
+        shader = nil, -- shaderPath
+        shaderParams = nil
     }, Drawable)
     return self
 end
@@ -62,6 +64,11 @@ end
 
 function Drawable:setClip(rect)
     self.clip = rect
+end
+
+function Drawable:setShader(path, params)
+    self.shader = path
+    self.shaderParams = params
 end
 
 return Drawable

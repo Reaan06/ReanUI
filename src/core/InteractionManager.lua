@@ -11,6 +11,7 @@ InteractionManager._focused         = nil  -- UIElement con foco de teclado
 InteractionManager._last_mouse_pos  = { x = 0, y = 0 }
 InteractionManager._last_click_time = 0
 InteractionManager._last_click_target = nil
+InteractionManager._focusable_pool = {} -- Cache temporal para navegación por TAB
 
 -- ============================================================================
 -- ALGORITMO HIT-TESTING
@@ -120,7 +121,6 @@ function InteractionManager.handleMouseButton(root, button, state, x, y)
         InteractionManager._pressed = nil
     end
 end
-
 --- Procesa la rueda del mouse para Scroll.
 function InteractionManager.handleMouseWheel(root, delta, x, y)
     local target = InteractionManager.hitTest(root, x, y)
@@ -128,6 +128,89 @@ function InteractionManager.handleMouseWheel(root, delta, x, y)
     
     -- Disparar como evento burbujeable
     return target:dispatchEvent("mousewheel", { delta = delta, x = x, y = y })
+end
+
+-- ============================================================================
+-- GESTIÓN DE FOCO Y TECLADO
+-- ============================================================================
+
+function InteractionManager.getFocusedElement()
+    return InteractionManager._focused
+end
+
+function InteractionManager.setFocusedElement(element)
+    if element == InteractionManager._focused then return end
+    
+    -- Blur previo
+    if InteractionManager._focused then
+        InteractionManager._focused:dispatchEvent("blur")
+        if InteractionManager._focused.onBlur then InteractionManager._focused:onBlur() end
+    end
+    
+    -- Focus nuevo
+    InteractionManager._focused = element
+    if element then
+        element:dispatchEvent("focus")
+        if element.onFocus then element:onFocus() end
+    end
+end
+
+--- Procesa la tecla presionada (MTA onClientKey).
+function InteractionManager.handleKeyboardKey(root, key, state)
+    if not state then return end -- Solo procesar 'down' (o según lógica de MTA)
+    
+    -- Interceptar TAB para navegación
+    if key == "tab" and state == "down" then
+        InteractionManager._navigateTab(root, getKeyState("lshift") or getKeyState("rshift"))
+        return true
+    end
+    
+    -- Reenviar al elemento con foco
+    local focused = InteractionManager._focused
+    if focused then
+        return focused:dispatchEvent("keydown", { key = key, state = state })
+    end
+end
+
+--- Procesa la entrada de carácter (MTA onClientCharacter).
+function InteractionManager.handleCharacterInput(char)
+    local focused = InteractionManager._focused
+    if focused then
+        return focused:dispatchEvent("character", { character = char })
+    end
+end
+
+-- Helper: Busca todos los elementos focusables en el árbol (DFS)
+local function collect_focusables(node, list)
+    if not node or node:isDestroyed() then return end
+    if node:isFocusable() then table.insert(list, node) end
+    for _, child in ipairs(node:getChildren()) do
+        collect_focusables(child, list)
+    end
+end
+
+--- Lógica de navegación cíclica con TAB.
+function InteractionManager._navigateTab(root, reverse)
+    local pool = {}
+    collect_focusables(root, pool)
+    if #pool == 0 then return end
+    
+    local currentIdx = 0
+    for i, el in ipairs(pool) do
+        if el == InteractionManager._focused then
+            currentIdx = i
+            break
+        end
+    end
+    
+    local nextIdx
+    if reverse then
+        nextIdx = currentIdx <= 1 and #pool or currentIdx - 1
+    else
+        nextIdx = currentIdx >= #pool and 1 or currentIdx + 1
+    end
+    
+    InteractionManager.setFocusedElement(pool[nextIdx])
 end
 
 return InteractionManager

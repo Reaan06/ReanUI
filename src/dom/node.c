@@ -1,3 +1,4 @@
+#include <stdlib.h>
 #include "dom/node.h"
 #include "core/memory.h"
 

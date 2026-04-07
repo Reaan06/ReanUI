@@ -1,6 +1,7 @@
 #include <lua.h>
 #include <lauxlib.h>
 #include <lualib.h>
+#include <stdlib.h>
 #include "dom/node.h"
 #include "css/parser.h"
 #include "layout/box_model.h"
@@ -13,20 +14,35 @@ typedef struct {
 static int l_parse_css(lua_State *L) {
     const char* css_string = luaL_checkstring(L, 1);
 
-    Node* root = rui_parse_css(css_string);
-    if (!root) {
+    rui_css_stylesheet_t* sheet = rui_parse_css(css_string);
+    if (!sheet) {
         lua_pushnil(L);
-        lua_pushstring(L, "[ReanUI] Failed to parse CSS: invalid or empty input.");
-        return 2;  /* Patrón estándar Lua: nil, mensaje_de_error */
+        lua_pushstring(L, "[ReanUI] Failed to parse CSS: invalid syntax or out of memory.");
+        return 2;
     }
 
-    LuaNodeUserData *ud = (LuaNodeUserData *)lua_newuserdata(L, sizeof(LuaNodeUserData));
-    luaL_getmetatable(L, "ReanUI_Node");
-    lua_setmetatable(L, -2);
+    lua_newtable(L);
+    for (uint32_t i = 0; i < sheet->num_rules; i++) {
+        rui_css_rule_t* rule = &sheet->rules[i];
+        
+        lua_pushstring(L, rule->selector);
+        lua_newtable(L);
+        
+        for (uint32_t j = 0; j < rule->num_props; j++) {
+            rui_css_prop_t* p = &rule->props[j];
+            lua_pushstring(L, p->name);
+            
+            if (p->type == RUI_CSS_TYPE_COLOR) {
+                lua_pushnumber(L, (lua_Number)p->val.color);
+            } else {
+                lua_pushstring(L, p->val.str);
+            }
+            lua_settable(L, -3);
+        }
+        lua_settable(L, -3);
+    }
 
-    ud->node = root;
-    ud->is_managed_by_lua = 1;
-
+    rui_free_css_stylesheet(sheet);
     return 1;
 }
 
@@ -65,11 +81,14 @@ static const struct luaL_Reg reanui_funcs[] = {
 #endif
 
 LUA_MOD_API int luaopen_reanui(lua_State *L) {
+    // Crear metatable para nodos
     luaL_newmetatable(L, "ReanUI_Node");
     lua_pushvalue(L, -1);
     lua_setfield(L, -2, "__index");
-    luaL_register(L, NULL, node_methods);
+    luaL_setfuncs(L, node_methods, 0);
+    lua_pop(L, 1);
     
-    luaL_register(L, "reanui", reanui_funcs);
+    // Crear librería principal
+    luaL_newlib(L, reanui_funcs);
     return 1;
 }

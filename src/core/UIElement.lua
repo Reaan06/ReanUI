@@ -40,6 +40,13 @@ function UIElement.new(tag, attrs)
     self._child_dirty = false      -- Algún descendiente requiere re-dibujado
     self._z_index   = 0            -- Capa de dibujado
 
+    -- Shaders
+    self._shaderPath = nil
+    self._shaderParams = {}
+
+    -- Foco e Interacción
+    self._focusable = false        -- ¿Puede recibir foco de teclado?
+
     -- Jerarquía DOM
     self._parent    = nil          -- ref débil manual
     self._children  = {}           -- array ordenado
@@ -171,6 +178,35 @@ function UIElement:animate(props, duration, easing, onComplete)
 end
 
 -- ============================================================================
+-- SHADERS
+-- ============================================================================
+
+--- Asigna un shader al elemento.
+-- @tparam string path Ruta al archivo .fx.
+-- @tparam table|nil params Parámetros iniciales para el shader.
+function UIElement:setShader(path, params)
+    self._shaderPath = path
+    self._shaderParams = params or {}
+    self:markDirty()
+    return self
+end
+
+function UIElement:getShaderPath()
+    return self._shaderPath
+end
+
+function UIElement:getShaderParams()
+    return self._shaderParams
+end
+
+--- Actualiza un parámetro específico del shader.
+function UIElement:setShaderValue(name, value)
+    self._shaderParams[name] = value
+    self:markDirty() -- Marcar como dirty para que el renderer aplique el cambio
+    return self
+end
+
+-- ============================================================================
 -- RENDER & DIRTY SYSTEM
 -- ============================================================================
 
@@ -202,6 +238,35 @@ end
 
 function UIElement:getZIndex()
     return self._z_index
+end
+
+-- ============================================================================
+-- GESTIÓN DE FOCO
+-- ============================================================================
+
+function UIElement:setFocusable(bool)
+    self._focusable = bool == true
+    return self
+end
+
+function UIElement:isFocusable()
+    return self._focusable
+end
+
+--- Intenta dar el foco a este elemento.
+function UIElement:focus()
+    if not self._focusable or self._destroyed then return false end
+    local InteractionManager = require("src.core.InteractionManager")
+    InteractionManager.setFocusedElement(self)
+    return true
+end
+
+--- Quita el foco de este elemento.
+function UIElement:blur()
+    local InteractionManager = require("src.core.InteractionManager")
+    if InteractionManager.getFocusedElement() == self then
+        InteractionManager.setFocusedElement(nil)
+    end
 end
 
 -- ============================================================================

@@ -1,0 +1,83 @@
+/* demo.css - Estilos Premium para la Demostración de ReanUI */
+
+:root {
+    --bg-main: #0f172a;
+    --bg-card: #1e293b;
+    --accent: #3b82f6;
+    --accent-hover: #2563eb;
+    --text-primary: #f8fafc;
+    --text-secondary: #94a3b8;
+    --border: #334155;
+    --error: #ef4444;
+}
+
+.screen-root {
+    background-color: transparent;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.main-panel {
+    width: 450px;
+    height: 550px;
+    background-color: var(--bg-card);
+    border-radius: 20px;
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    transition: all 0.3s;
+}
+
+.title {
+    font-size: 28px;
+    color: var(--text-primary);
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.subtitle {
+    font-size: 14px;
+    color: var(--text-secondary);
+    margin-top: -15px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.btn-primary {
+    background-color: var(--accent);
+    color: white;
+    border-radius: 10px;
+    height: 50px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.btn-primary:hover {
+    background-color: var(--accent-hover);
+}
+
+.input-field {
+    background-color: #0f172a;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text-primary);
+    padding: 12px;
+    font-size: 15px;
+}
+
+.input-field:focus {
+    border-color: var(--accent);
+}
+
+.footer {
+    margin-top: auto;
+    font-size: 12px;
+    color: var(--text-secondary);
+    text-align: center;
+}

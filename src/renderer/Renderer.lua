@@ -3,6 +3,7 @@
 -- Responsabilidad: Capturar el estado de la UI y convertirlo en una lista ordenada para el Canvas.
 
 local Drawable = require("src.renderer.Drawable")
+local ShaderManager = require("src.shaders.ShaderManager")
 
 local Renderer = {}
 Renderer.__index = Renderer
@@ -89,6 +90,13 @@ local function collect_drawables(node, parent_clip, result, cache)
             table.insert(node_drawables, text)
         end
 
+        -- Aplicar SHADER si el nodo lo tiene
+        if node._shaderPath then
+            for _, d in ipairs(node_drawables) do
+                d:setShader(node._shaderPath, node._shaderParams)
+            end
+        end
+
         -- Configurar propiedades comunes
         local z = node:getZIndex()
         local was_z = cache[uid] and cache[uid][1] and cache[uid][1].z_index
@@ -143,7 +151,14 @@ function Renderer:render(root, canvas)
     for _, d in ipairs(draw_list) do
         canvas:setClip(d.clip and d.clip.x, d.clip and d.clip.y, d.clip and d.clip.w, d.clip and d.clip.h)
         
-        if d.type == "rect" then
+        -- Si el Drawable tiene un shader, usarlo
+        if d.shader then
+            local shader = ShaderManager.getShader(d.shader)
+            if shader then
+                ShaderManager.applyParams(shader, d.shaderParams)
+                canvas:drawShader(d.data.x, d.data.y, d.data.w, d.data.h, shader, d.data.color)
+            end
+        elseif d.type == "rect" then
             canvas:drawRect(d.data.x, d.data.y, d.data.w, d.data.h, d.data.color, d.data.radius)
         elseif d.type == "text" then
             canvas:drawText(d.data.x, d.data.y, d.data.text, d.data.color, d.data.size)

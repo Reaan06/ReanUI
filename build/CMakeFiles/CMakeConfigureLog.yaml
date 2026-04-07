@@ -1690,3 +1690,168 @@ events:
       CMAKE_SYSTEM_LIBRARY_PATH:
         - "/usr/lib/X11"
 ...
+
+---
+events:
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/usr/share/cmake/Modules/CheckFunctionExists.cmake:167 (try_compile)"
+      - "build/_deps/lexbor-src/feature.cmake:7 (CHECK_FUNCTION_EXISTS)"
+      - "build/_deps/lexbor-src/source/lexbor/core/config.cmake:11 (FEATURE_TRY_FUNCTION_EXISTS)"
+      - "build/_deps/lexbor-src/config.cmake:172 (include)"
+      - "build/_deps/lexbor-src/CMakeLists.txt:235 (INCLUDE_MODULE_CONFIG)"
+    checks:
+      - "Looking for ceil"
+    directories:
+      source: "/home/reaan/ReanUI/ReanUI/build/CMakeFiles/CMakeScratch/TryCompile-yXhjHg"
+      binary: "/home/reaan/ReanUI/ReanUI/build/CMakeFiles/CMakeScratch/TryCompile-yXhjHg"
+    cmakeVariables:
+      CMAKE_C_FLAGS: ""
+      CMAKE_C_FLAGS_DEBUG: "-g"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_POSITION_INDEPENDENT_CODE: "ON"
+    buildResult:
+      variable: "test_result"
+      cached: true
+      stdout: |
+        Change Dir: '/home/reaan/ReanUI/ReanUI/build/CMakeFiles/CMakeScratch/TryCompile-yXhjHg'
+        
+        Run Build Command(s): /usr/bin/cmake -E env VERBOSE=1 /usr/bin/make -f Makefile cmTC_f40e0/fast
+        /usr/bin/make  -f CMakeFiles/cmTC_f40e0.dir/build.make CMakeFiles/cmTC_f40e0.dir/build
+        make[1]: Entering directory '/home/reaan/ReanUI/ReanUI/build/CMakeFiles/CMakeScratch/TryCompile-yXhjHg'
+        /bin/sh: warning: setlocale: LC_ALL: cannot change locale (en_US.UTF-8): No such file or directory
+        Building C object CMakeFiles/cmTC_f40e0.dir/CheckFunctionExists.c.o
+        /usr/bin/cc   -DCHECK_FUNCTION_EXISTS=ceil -std=gnu99 -fPIE -o CMakeFiles/cmTC_f40e0.dir/CheckFunctionExists.c.o -c /home/reaan/ReanUI/ReanUI/build/CMakeFiles/CMakeScratch/TryCompile-yXhjHg/CheckFunctionExists.c
+        <command-line>: warning: conflicting types for built-in function 'ceil'; expected 'double(double)' [-Wbuiltin-declaration-mismatch]
+        /home/reaan/ReanUI/ReanUI/build/CMakeFiles/CMakeScratch/TryCompile-yXhjHg/CheckFunctionExists.c:7:3: note: in expansion of macro 'CHECK_FUNCTION_EXISTS'
+            7 |   CHECK_FUNCTION_EXISTS(void);
+              |   ^~~~~~~~~~~~~~~~~~~~~
+        /home/reaan/ReanUI/ReanUI/build/CMakeFiles/CMakeScratch/TryCompile-yXhjHg/CheckFunctionExists.c:1:1: note: 'ceil' is declared in header '<math.h>'
+          +++ |+#include <math.h>
+            1 | #ifdef CHECK_FUNCTION_EXISTS
+        /bin/sh: warning: setlocale: LC_ALL: cannot change locale (en_US.UTF-8): No such file or directory
+        Linking C executable cmTC_f40e0
+        /usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_f40e0.dir/link.txt --verbose=1
+        /usr/bin/ld: CMakeFiles/cmTC_f40e0.dir/CheckFunctionExists.c.o: in function `main':
+        CheckFunctionExists.c:(.text+0x10): undefined reference to `ceil'
+        collect2: error: ld returned 1 exit status
+        /usr/bin/cc  -DCHECK_FUNCTION_EXISTS=ceil CMakeFiles/cmTC_f40e0.dir/CheckFunctionExists.c.o -o cmTC_f40e0
+        make[1]: *** [CMakeFiles/cmTC_f40e0.dir/build.make:102: cmTC_f40e0] Error 1
+        make[1]: Leaving directory '/home/reaan/ReanUI/ReanUI/build/CMakeFiles/CMakeScratch/TryCompile-yXhjHg'
+        make: *** [Makefile:134: cmTC_f40e0/fast] Error 2
+        
+      exitCode: 2
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/usr/share/cmake/Modules/CheckFunctionExists.cmake:167 (try_compile)"
+      - "build/_deps/lexbor-src/feature.cmake:14 (CHECK_FUNCTION_EXISTS)"
+      - "build/_deps/lexbor-src/source/lexbor/core/config.cmake:11 (FEATURE_TRY_FUNCTION_EXISTS)"
+      - "build/_deps/lexbor-src/config.cmake:172 (include)"
+      - "build/_deps/lexbor-src/CMakeLists.txt:235 (INCLUDE_MODULE_CONFIG)"
+    checks:
+      - "Looking for ceil"
+    directories:
+      source: "/home/reaan/ReanUI/ReanUI/build/CMakeFiles/CMakeScratch/TryCompile-oplU8d"
+      binary: "/home/reaan/ReanUI/ReanUI/build/CMakeFiles/CMakeScratch/TryCompile-oplU8d"
+    cmakeVariables:
+      CMAKE_C_FLAGS: ""
+      CMAKE_C_FLAGS_DEBUG: "-g"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_POSITION_INDEPENDENT_CODE: "ON"
+    buildResult:
+      variable: "test_result"
+      cached: true
+      stdout: |
+        Change Dir: '/home/reaan/ReanUI/ReanUI/build/CMakeFiles/CMakeScratch/TryCompile-oplU8d'
+        
+        Run Build Command(s): /usr/bin/cmake -E env VERBOSE=1 /usr/bin/make -f Makefile cmTC_f35ef/fast
+        /usr/bin/make  -f CMakeFiles/cmTC_f35ef.dir/build.make CMakeFiles/cmTC_f35ef.dir/build
+        make[1]: Entering directory '/home/reaan/ReanUI/ReanUI/build/CMakeFiles/CMakeScratch/TryCompile-oplU8d'
+        /bin/sh: warning: setlocale: LC_ALL: cannot change locale (en_US.UTF-8): No such file or directory
+        Building C object CMakeFiles/cmTC_f35ef.dir/CheckFunctionExists.c.o
+        /usr/bin/cc   -DCHECK_FUNCTION_EXISTS=ceil -std=gnu99 -fPIE -o CMakeFiles/cmTC_f35ef.dir/CheckFunctionExists.c.o -c /home/reaan/ReanUI/ReanUI/build/CMakeFiles/CMakeScratch/TryCompile-oplU8d/CheckFunctionExists.c
+        <command-line>: warning: conflicting types for built-in function 'ceil'; expected 'double(double)' [-Wbuiltin-declaration-mismatch]
+        /home/reaan/ReanUI/ReanUI/build/CMakeFiles/CMakeScratch/TryCompile-oplU8d/CheckFunctionExists.c:7:3: note: in expansion of macro 'CHECK_FUNCTION_EXISTS'
+            7 |   CHECK_FUNCTION_EXISTS(void);
+              |   ^~~~~~~~~~~~~~~~~~~~~
+        /home/reaan/ReanUI/ReanUI/build/CMakeFiles/CMakeScratch/TryCompile-oplU8d/CheckFunctionExists.c:1:1: note: 'ceil' is declared in header '<math.h>'
+          +++ |+#include <math.h>
+            1 | #ifdef CHECK_FUNCTION_EXISTS
+        /bin/sh: warning: setlocale: LC_ALL: cannot change locale (en_US.UTF-8): No such file or directory
+        Linking C executable cmTC_f35ef
+        /usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_f35ef.dir/link.txt --verbose=1
+        /usr/bin/cc  -DCHECK_FUNCTION_EXISTS=ceil CMakeFiles/cmTC_f35ef.dir/CheckFunctionExists.c.o -o cmTC_f35ef  -lm
+        make[1]: Leaving directory '/home/reaan/ReanUI/ReanUI/build/CMakeFiles/CMakeScratch/TryCompile-oplU8d'
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "build/_deps/lexbor-src/feature.cmake:65 (try_compile)"
+      - "build/_deps/lexbor-src/CMakeLists.txt:314 (FEATURE_CHECK_ASAN)"
+    directories:
+      source: "/home/reaan/ReanUI/ReanUI/build/CMakeFiles/CMakeTmp"
+      binary: "/home/reaan/ReanUI/ReanUI/build/CMakeFiles/CMakeTmp"
+    cmakeVariables:
+      CMAKE_C_FLAGS: " -O2 -Wall -pedantic -pipe -std=c99 -fPIC"
+      CMAKE_C_FLAGS_DEBUG: "-g"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_POSITION_INDEPENDENT_CODE: "ON"
+    buildResult:
+      variable: "LEXBOR_HAVE_ASAN"
+      cached: true
+      stdout: |
+        Change Dir: '/home/reaan/ReanUI/ReanUI/build/CMakeFiles/CMakeTmp'
+        
+        Run Build Command(s): /usr/bin/cmake -E env VERBOSE=1 /usr/bin/make -f Makefile cmTC_ffc87/fast
+        /usr/bin/make  -f CMakeFiles/cmTC_ffc87.dir/build.make CMakeFiles/cmTC_ffc87.dir/build
+        make[1]: Entering directory '/home/reaan/ReanUI/ReanUI/build/CMakeFiles/CMakeTmp'
+        /bin/sh: warning: setlocale: LC_ALL: cannot change locale (en_US.UTF-8): No such file or directory
+        Building C object CMakeFiles/cmTC_ffc87.dir/feature_check.c.o
+        /usr/bin/cc   -O2 -Wall -pedantic -pipe -std=c99 -fPIC  -std=gnu99 -fPIE -o CMakeFiles/cmTC_ffc87.dir/feature_check.c.o -c /home/reaan/ReanUI/ReanUI/build/feature_check.c
+        /home/reaan/ReanUI/ReanUI/build/feature_check.c: In function 'main':
+        /home/reaan/ReanUI/ReanUI/build/feature_check.c:19:1: error: expected expression before '}' token
+           19 | }
+              | ^
+        make[1]: *** [CMakeFiles/cmTC_ffc87.dir/build.make:81: CMakeFiles/cmTC_ffc87.dir/feature_check.c.o] Error 1
+        make[1]: Leaving directory '/home/reaan/ReanUI/ReanUI/build/CMakeFiles/CMakeTmp'
+        make: *** [Makefile:134: cmTC_ffc87/fast] Error 2
+        
+      exitCode: 2
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "build/_deps/lexbor-src/feature.cmake:120 (try_compile)"
+      - "build/_deps/lexbor-src/CMakeLists.txt:319 (FEATURE_CHECK_MSAN)"
+    directories:
+      source: "/home/reaan/ReanUI/ReanUI/build/CMakeFiles/CMakeTmp"
+      binary: "/home/reaan/ReanUI/ReanUI/build/CMakeFiles/CMakeTmp"
+    cmakeVariables:
+      CMAKE_C_FLAGS: " -O2 -Wall -pedantic -pipe -std=c99 -fPIC"
+      CMAKE_C_FLAGS_DEBUG: "-g"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_POSITION_INDEPENDENT_CODE: "ON"
+    buildResult:
+      variable: "LEXBOR_HAVE_MSAN"
+      cached: true
+      stdout: |
+        Change Dir: '/home/reaan/ReanUI/ReanUI/build/CMakeFiles/CMakeTmp'
+        
+        Run Build Command(s): /usr/bin/cmake -E env VERBOSE=1 /usr/bin/make -f Makefile cmTC_64f8b/fast
+        /usr/bin/make  -f CMakeFiles/cmTC_64f8b.dir/build.make CMakeFiles/cmTC_64f8b.dir/build
+        make[1]: Entering directory '/home/reaan/ReanUI/ReanUI/build/CMakeFiles/CMakeTmp'
+        /bin/sh: warning: setlocale: LC_ALL: cannot change locale (en_US.UTF-8): No such file or directory
+        Building C object CMakeFiles/cmTC_64f8b.dir/feature_check.c.o
+        /usr/bin/cc   -O2 -Wall -pedantic -pipe -std=c99 -fPIC  -std=gnu99 -fPIE -o CMakeFiles/cmTC_64f8b.dir/feature_check.c.o -c /home/reaan/ReanUI/ReanUI/build/feature_check.c
+        /home/reaan/ReanUI/ReanUI/build/feature_check.c: In function 'main':
+        /home/reaan/ReanUI/ReanUI/build/feature_check.c:11:1: error: expected expression before '}' token
+           11 | }
+              | ^
+        make[1]: *** [CMakeFiles/cmTC_64f8b.dir/build.make:81: CMakeFiles/cmTC_64f8b.dir/feature_check.c.o] Error 1
+        make[1]: Leaving directory '/home/reaan/ReanUI/ReanUI/build/CMakeFiles/CMakeTmp'
+        make: *** [Makefile:134: cmTC_64f8b/fast] Error 2
+        
+      exitCode: 2
+...

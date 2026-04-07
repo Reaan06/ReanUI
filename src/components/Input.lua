@@ -50,6 +50,21 @@ function Input.new(inputType, attrs)
     self:setStyle("transition", "border-color 0.2s, background-color 0.2s")
     self:setStyle("cursor", "text")
 
+    self:setFocusable(true)
+
+    -- Escuchar eventos de teclado cuando tiene el foco
+    self:addEventListener("character", function(event)
+        self:appendChar(event.character)
+    end)
+
+    self:addEventListener("keydown", function(event)
+        if event.key == "backspace" then
+            self:backspace()
+        elseif event.key == "enter" or event.key == "num_enter" then
+            self:dispatchEvent("submit", { value = self._value })
+        end
+    end)
+
     return self
 end
 
@@ -208,6 +223,13 @@ end
 function Input:clear()
     self:setValue("")
     return self
+end
+
+function Input:backspace()
+    if self._readonly or #self._value == 0 then return end
+    -- Manejo básico de backspace (se puede mejorar para UTF-8)
+    self:setValue(self._value:sub(1, -2))
+    self:dispatchEvent("input", { type = "backspace", value = self._value })
 end
 
 -- ============================================================================

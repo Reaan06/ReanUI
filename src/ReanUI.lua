@@ -13,6 +13,7 @@ local Scrollbox     = require("src.components.Scrollbox")
 local FlexboxLayout = require("src.layout.FlexboxLayout")
 local Renderer      = require("src.renderer.Renderer")
 local Canvas        = require("src.renderer.Canvas")
+local MtaCanvas     = require("src.renderer.MtaCanvas")
 local ThemeManager = require("src.theme.ThemeManager")
 local InteractionManager = require("src.core.InteractionManager")
 local AnimationManager = require("src.core.AnimationManager")
@@ -28,7 +29,7 @@ local _global_styles = {} -- { [selector] = { props } }
 -- Nodo raíz por defecto (normalmente el "Screen")
 local _root = nil
 local _renderer = Renderer.new()
-local _canvas = Canvas.new(1920, 1080) -- Canvas por defecto (sin backend)
+local _canvas = nil -- Se inicializa en ReanUI.init()
 
 -- Mapeo de tags a clases de componentes
 local _component_map = {
@@ -46,11 +47,10 @@ local _component_map = {
 -- ============================================================================
 
 --- Carga un bloque de CSS global para toda la aplicación.
---- @tparam string css_string Bloque de código CSS a procesar.
---- @treturn boolean Éxito de la operación.
---- @treturn string|nil Mensaje de error si falló el parseo.
 function ReanUI.loadStyle(css_string)
-    local tree, err = css_parser.parse_css_string(css_string)
+    -- Cargar el parser nativo (Lexbor)
+    local css_parser = require("build.reanui") 
+    local tree, err = css_parser.parse_css(css_string)
     if err then return false, err end
     
     -- Mezclar con estilos existentes
@@ -146,14 +146,46 @@ ReanUI.create = ReanUI.createElement
 -- ============================================================================
 
 --- Inicializa el nodo raíz y el sistema de UI.
---- @tparam number width Ancho inicial del lienzo.
---- @tparam number height Alto inicial del lienzo.
---- @treturn Container Nodo raíz del árbol de UI.
-function ReanUI.init(width, height)
+function ReanUI.init(width, height, postGUI)
+    local sw, sh = 1920, 1080
+    if getScreenSize then sw, sh = getScreenSize() end
+    
+    width = width or sw
+    height = height or sh
+    
+    -- Instanciar Backend de MTA
+    _canvas = MtaCanvas.new(width, height, postGUI)
+    
     _root = Container.new("column", { id = "screen-root" })
-    _root:setStyle("width", width or 1920)
-    _root:setStyle("height", height or 1080)
+    _root:setStyle("width", width)
+    _root:setStyle("height", height)
     _root:setStyle("padding", "0px")
+    
+    -- Autovinculado al render de MTA si existe
+    if addEventHandler then
+        addEventHandler("onClientRender", root, function()
+            local dt = 1/60 -- Aproximado o calcular real
+            ReanUI.update(nil, nil, dt)
+        end)
+        
+        -- Teclado y Caracteres
+        addEventHandler("onClientKey", root, function(key, state)
+            ReanUI.handleKeyboardEvent("key", key, state)
+        end)
+        addEventHandler("onClientCharacter", root, function(char)
+            ReanUI.handleCharacterEvent(char)
+        end)
+        
+        -- Recuperación de recursos de MTA (Shaders, RTs)
+        addEventHandler("onClientRestore", root, function()
+            local ShaderManager = require("src.shaders.ShaderManager")
+            ShaderManager.clearCache()
+            if _canvas and _canvas.destroy then
+                -- O simplemente forzar recreación
+            end
+        end)
+    end
+    
     return _root
 end
 
@@ -214,9 +246,16 @@ function ReanUI.handleMouseEvent(event_type, ...)
     end
 end
 
---- Inyecta eventos de teclado desde el Host al sistema de UI (Reservado).
-function ReanUI.handleKeyboardEvent(event_type, ...)
-    -- Por implementar
+--- Inyecta eventos de teclado desde el Host al sistema de UI.
+function ReanUI.handleKeyboardEvent(event_type, key, state)
+    if not _root then return end
+    return InteractionManager.handleKeyboardKey(_root, key, state)
+end
+
+--- Inyecta entrada de caracteres (texto) al sistema de UI.
+function ReanUI.handleCharacterEvent(char)
+    if not _root then return end
+    return InteractionManager.handleCharacterInput(char)
 end
 
 -- ============================================================================
