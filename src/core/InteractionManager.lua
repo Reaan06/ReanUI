@@ -3,6 +3,7 @@
 -- Traduce coordenadas crudas del mouse/teclado en eventos semánticos (click, hover, focus).
 
 local InteractionManager = {}
+local EventSystem = require("src.event.EventSystem")
 
 -- Estado actual de la interacción global
 InteractionManager._hovered         = nil  -- UIElement bajo el mouse
@@ -12,6 +13,18 @@ InteractionManager._last_mouse_pos  = { x = 0, y = 0 }
 InteractionManager._last_click_time = 0
 InteractionManager._last_click_target = nil
 InteractionManager._focusable_pool = {} -- Cache temporal para navegación por TAB
+
+local function dispatch(target, eventType, data)
+    if not target then return false end
+    local event = EventSystem.Event.new(eventType, data)
+    return EventSystem.EventDispatcher.dispatch(target, event)
+end
+
+local function normalizeKeyState(state)
+    if state == true or state == "down" then return "down" end
+    if state == false or state == "up" then return "up" end
+    return state
+end
 
 -- ============================================================================
 -- ALGORITMO HIT-TESTING
@@ -56,19 +69,18 @@ function InteractionManager.handleMouseMove(root, x, y)
     if target ~= InteractionManager._hovered then
         -- 1. Salir del anterior
         if InteractionManager._hovered then
-            InteractionManager._hovered:dispatchEvent("mouseleave", { x = x, y = y })
-            -- Simular llamado de método si existe (legacy/convenience)
-            if InteractionManager._hovered.onMouseLeave then 
-                InteractionManager._hovered:onMouseLeave() 
+            dispatch(InteractionManager._hovered, "mouseleave", { x = x, y = y })
+            if InteractionManager._hovered.onMouseLeave then
+                InteractionManager._hovered:onMouseLeave()
             end
         end
 
         -- 2. Entrar al nuevo
         InteractionManager._hovered = target
         if InteractionManager._hovered then
-            InteractionManager._hovered:dispatchEvent("mouseenter", { x = x, y = y })
-            if InteractionManager._hovered.onMouseEnter then 
-                InteractionManager._hovered:onMouseEnter() 
+            dispatch(InteractionManager._hovered, "mouseenter", { x = x, y = y })
+            if InteractionManager._hovered.onMouseEnter then
+                InteractionManager._hovered:onMouseEnter()
             end
         end
     end
@@ -83,15 +95,23 @@ function InteractionManager.handleMouseButton(root, button, state, x, y)
         if target then
             -- Gestionar FOCO
             if target ~= InteractionManager._focused then
-                if InteractionManager._focused and InteractionManager._focused.onBlur then 
-                    InteractionManager._focused:onBlur() 
+                if InteractionManager._focused then 
+                    dispatch(InteractionManager._focused, "blur")
+                    if InteractionManager._focused.onBlur then
+                        InteractionManager._focused:onBlur()
+                    end
                 end
                 InteractionManager._focused = target
-                if target.onFocus then target:onFocus() end
+                dispatch(target, "focus")
+                if target.onFocus then
+                    target:onFocus()
+                end
             end
 
-            target:dispatchEvent("mousedown", { button = button, x = x, y = y })
-            if target.onMouseDown then target:onMouseDown() end
+            dispatch(target, "mousedown", { button = button, x = x, y = y })
+            if target.onMouseDown then
+                target:onMouseDown()
+            end
         else
             -- Clic fuera limpia el foco
             InteractionManager._focused = nil
@@ -99,23 +119,26 @@ function InteractionManager.handleMouseButton(root, button, state, x, y)
 
     elseif state == "up" then
         if target then
-            target:dispatchEvent("mouseup", { button = button, x = x, y = y })
-            if target.onMouseUp then target:onMouseUp() end
+            dispatch(target, "mouseup", { button = button, x = x, y = y })
+            if target.onMouseUp then
+                target:onMouseUp()
+            end
 
             -- Si es el mismo que se presionó, disparar CLICK
             if target == InteractionManager._pressed then
                 local now = os.clock()
-                target:dispatchEvent("click", { button = button, x = x, y = y })
+                dispatch(target, "click", { button = button, x = x, y = y })
                 
                 -- Doble clic (umbral de 300ms)
                 if target == InteractionManager._last_click_target and (now - InteractionManager._last_click_time) < 0.3 then
-                    target:dispatchEvent("dblclick", { button = button, x = x, y = y })
+                    dispatch(target, "dblclick", { button = button, x = x, y = y })
                 end
                 
                 InteractionManager._last_click_time = now
                 InteractionManager._last_click_target = target
-                
-                if target.press then target:press() end -- Conveniencia para componentes
+                if target.press then
+                    target:press()
+                end
             end
         end
         InteractionManager._pressed = nil
@@ -127,7 +150,7 @@ function InteractionManager.handleMouseWheel(root, delta, x, y)
     if not target then return false end
     
     -- Disparar como evento burbujeable
-    return target:dispatchEvent("mousewheel", { delta = delta, x = x, y = y })
+    return dispatch(target, "mousewheel", { delta = delta, x = x, y = y })
 end
 
 -- ============================================================================
@@ -143,24 +166,29 @@ function InteractionManager.setFocusedElement(element)
     
     -- Blur previo
     if InteractionManager._focused then
-        InteractionManager._focused:dispatchEvent("blur")
-        if InteractionManager._focused.onBlur then InteractionManager._focused:onBlur() end
+        dispatch(InteractionManager._focused, "blur")
+        if InteractionManager._focused.onBlur then
+            InteractionManager._focused:onBlur()
+        end
     end
     
     -- Focus nuevo
     InteractionManager._focused = element
     if element then
-        element:dispatchEvent("focus")
-        if element.onFocus then element:onFocus() end
+        dispatch(element, "focus")
+        if element.onFocus then
+            element:onFocus()
+        end
     end
 end
 
 --- Procesa la tecla presionada (MTA onClientKey).
 function InteractionManager.handleKeyboardKey(root, key, state)
-    if not state then return end -- Solo procesar 'down' (o según lógica de MTA)
+    local keyState = normalizeKeyState(state)
+    if keyState ~= "down" then return end -- Solo procesar key-down
     
     -- Interceptar TAB para navegación
-    if key == "tab" and state == "down" then
+    if key == "tab" then
         InteractionManager._navigateTab(root, getKeyState("lshift") or getKeyState("rshift"))
         return true
     end
@@ -168,7 +196,7 @@ function InteractionManager.handleKeyboardKey(root, key, state)
     -- Reenviar al elemento con foco
     local focused = InteractionManager._focused
     if focused then
-        return focused:dispatchEvent("keydown", { key = key, state = state })
+        return dispatch(focused, "keydown", { key = key, state = keyState })
     end
 end
 
@@ -176,7 +204,7 @@ end
 function InteractionManager.handleCharacterInput(char)
     local focused = InteractionManager._focused
     if focused then
-        return focused:dispatchEvent("character", { character = char })
+        return dispatch(focused, "character", { character = char })
     end
 end
 

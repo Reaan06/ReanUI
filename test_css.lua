@@ -1,26 +1,23 @@
--- test_css.lua
-local ui = require("reanui")
+-- test_css.lua (Lua-only)
+local parser = require("src.parser.css_parser")
 
-print("\n=== TEST FASE 2: PARSER CSS ESTRICTO ===")
-local view = ui.createView()
-
-print("\n[->] Inyectando bloque CSS completo (incluye espacios vacíos y formatos rudos)...")
+print("\n=== TEST PARSER CSS (LUA) ===")
 local css_string = [[
-    width:   450px ;
-    height   : 300px;
-    background-color: #FA05B2 ;
-    
-    atributo-invalido ; -- tolerante a esto sin crashear
-    
-    background-color: #FFAA22 -- Sobreescribimos asumiendo la falta del ';' al final
+    .btn {
+        width:   450px ;
+        height   : 300px;
+        background-color: #FA05B2 ;
+    }
+    #hero {
+        color: #FFFFFF;
+        atributo-invalido: nope;
+    }
 ]]
 
--- Llamamos al nuevo método parser
-local ok = view:setStyleSheet(css_string)
-print("Estado del parsing CSS:", ok)
-
--- Validamos que el binding hizo su trabajo e internalizó las primitivas flotantes y decimales (hex) de color
-print("\n[->] Resultados Matemáticos calculados internamente en C:")
-view:debugPrint()
+local tree, err = parser.parse_css_string(css_string)
+print("Error:", err)
+print("Selectores parseados:", tree and "OK" or "FAIL")
+print(".btn width:", tree[".btn"] and tree[".btn"]["width"])
+print("#hero color:", tree["#hero"] and tree["#hero"]["color"])
 
 print("\n=== SUCCESS ===")

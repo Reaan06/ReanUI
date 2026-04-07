@@ -8,6 +8,13 @@ local Button = {}
 Button.__index = Button
 setmetatable(Button, { __index = UIElement })
 
+local function nowMs()
+    if type(getTickCount) == "function" then
+        return getTickCount()
+    end
+    return os.time() * 1000
+end
+
 -- Configuración por defecto
 Button.DEBOUNCE_MS = 300
 
@@ -42,7 +49,44 @@ function Button.new(label, icon, attrs)
         border: none;
     ]])
     
+    self:_attachInternalListeners()
+    
     return self
+end
+
+function Button:_attachInternalListeners()
+    self:addEventListener("mouseenter", function(e)
+        if self._disabled then return end
+        self._is_hovered = true
+        self:addClass("is-hover")
+        self:setStyle("background-color", "var(--rean-accent-hover)")
+    end)
+
+    self:addEventListener("mouseleave", function(e)
+        if self._disabled then return end
+        self._is_hovered = false
+        self._is_active = false
+        self:removeClass("is-hover")
+        self:removeClass("is-active")
+        self:setStyle("background-color", "var(--rean-accent)")
+        self:setStyle("transform", "scale(1.0)")
+    end)
+
+    self:addEventListener("mousedown", function(e)
+        if self._disabled then return end
+        self._is_active = true
+        self:addClass("is-active")
+        self:setStyle("background-color", "var(--rean-accent-active)")
+        self:setStyle("transform", "scale(0.95)")
+    end)
+
+    self:addEventListener("mouseup", function(e)
+        if self._disabled then return end
+        self._is_active = false
+        self:removeClass("is-active")
+        self:setStyle("transform", "scale(1.0)")
+        self:setStyle("background-color", self._is_hovered and "var(--rean-accent-hover)" or "var(--rean-accent)")
+    end)
 end
 
 -- ============================================================================
@@ -92,39 +136,60 @@ function Button:setDisabled(disabled)
     return self
 end
 
--- Métodos para simular/gestionar eventos de entrada (Hover/Active)
+-- Compatibilidad API legacy
+function Button:disable()
+    return self:setDisabled(true)
+end
+
+function Button:enable()
+    return self:setDisabled(false)
+end
+
+function Button:getState()
+    if self._disabled then return "disabled" end
+    if self._is_active then return "active" end
+    if self._is_hovered then return "hover" end
+    return "normal"
+end
+
 function Button:onMouseEnter()
-    if self._disabled then return end
+    if self._disabled then return self end
     self._is_hovered = true
     self:addClass("is-hover")
     self:setStyle("background-color", "var(--rean-accent-hover)")
+    return self
 end
 
 function Button:onMouseLeave()
-    if self._disabled then return end
+    if self._disabled then return self end
     self._is_hovered = false
     self._is_active = false
     self:removeClass("is-hover")
     self:removeClass("is-active")
     self:setStyle("background-color", "var(--rean-accent)")
     self:setStyle("transform", "scale(1.0)")
+    return self
 end
 
 function Button:onMouseDown()
-    if self._disabled then return end
+    if self._disabled then return self end
     self._is_active = true
     self:addClass("is-active")
     self:setStyle("background-color", "var(--rean-accent-active)")
     self:setStyle("transform", "scale(0.95)")
+    return self
 end
 
 function Button:onMouseUp()
-    if self._disabled then return end
+    if self._disabled then return self end
     self._is_active = false
     self:removeClass("is-active")
     self:setStyle("transform", "scale(1.0)")
     self:setStyle("background-color", self._is_hovered and "var(--rean-accent-hover)" or "var(--rean-accent)")
+    return self
 end
+
+
 
 -- ============================================================================
 -- EVENTOS Y CALLBACKS
@@ -137,8 +202,7 @@ function Button:onClick(callback)
     
     self:addEventListener("click", function(data)
         -- 1. Verificación de cooldown (Debounce)
-        -- En entornos reales como MTA o Love2D, usamos la función global de tiempo
-        local now = os.time() * 1000 -- Fallback a seg*1000 si no hay os.clock preciso
+        local now = nowMs()
         if (now - self._last_click_ms) < Button.DEBOUNCE_MS then
             return -- Ignorar clic muy rápido
         end
@@ -158,14 +222,14 @@ function Button:press()
     
     -- El debouncing y el despacho del evento 'click' 
     -- ocurrirán aquí si queremos centralizar la lógica de negocio del clic.
-    local now = os.time() * 1000
+    local now = nowMs()
     if (now - self._last_click_ms) < Button.DEBOUNCE_MS then
         return self
     end
     self._last_click_ms = now
 
     self:dispatchEvent("click", { 
-        timestamp = os.time(), 
+        timestamp = now, 
         uid = self:getUid(),
         label = self._label 
     })

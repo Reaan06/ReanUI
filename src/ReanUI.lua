@@ -48,9 +48,9 @@ local _component_map = {
 
 --- Carga un bloque de CSS global para toda la aplicación.
 function ReanUI.loadStyle(css_string)
-    -- Cargar el parser nativo (Lexbor)
-    local css_parser = require("build.reanui") 
-    local tree, err = css_parser.parse_css(css_string)
+    -- Parser CSS 100% Lua
+    local css_parser = require("src.parser.css_parser")
+    local tree, err = css_parser.parse_css_string(css_string)
     if err then return false, err end
     
     -- Mezclar con estilos existentes
@@ -180,8 +180,8 @@ function ReanUI.init(width, height, postGUI)
         addEventHandler("onClientRestore", root, function()
             local ShaderManager = require("src.shaders.ShaderManager")
             ShaderManager.clearCache()
-            if _canvas and _canvas.destroy then
-                -- O simplemente forzar recreación
+            if _canvas and _canvas.onClientRestore then
+                _canvas:onClientRestore()
             end
         end)
     end

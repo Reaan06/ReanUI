@@ -7,7 +7,12 @@ print("\n==========================================================")
 print("===  REANUI: TEST ADVANCED EVENT SYSTEM                ===")
 print("==========================================================\n")
 
--- 1. Setup Jerarquía: Grandparent > Parent > Child
+-- MOCK para correr tests sin engine de MTA
+_G.dxCreateShader = function() return "mocked_shader" end
+_G.dxCreateRenderTarget = function() return "mocked_rt" end
+_G.getScreenSize = function() return 800, 600 end
+_G.addEventHandler = function() end
+
 local root = ReanUI.init(800, 600)
 local gp = ReanUI.create("container", { id = "grandparent" })
 local p  = ReanUI.create("container", { id = "parent" })

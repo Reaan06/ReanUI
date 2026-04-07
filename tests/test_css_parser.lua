@@ -1,6 +1,6 @@
-local reanui = require("build.reanui")
+local parser = require("src.parser.css_parser")
 
--- Prueba de parseo CSS con Lexbor
+-- Prueba de parseo CSS con parser Lua
 local css = [[
     .btn {
         background-color: #ff0000;
@@ -13,8 +13,8 @@ local css = [[
     }
 ]]
 
-print("--- Iniciando prueba de parseo Lexbor ---")
-local tree, err = reanui.parse_css(css)
+print("--- Iniciando prueba de parseo CSS (Lua) ---")
+local tree, err = parser.parse_css_string(css)
 
 if not tree then
     print("Error:", err)

@@ -1,100 +1,153 @@
-# Guía de API: ReanUI 📚
+# Guía de API: ReanUI
 
-Esta guía proporciona la referencia técnica completa para el desarrollo de interfaces con ReanUI.
+Guía técnica del estado actual del API público.
 
----
+## Módulo principal `src.ReanUI`
 
-## 🏗️ Módulo Principal: `ReanUI`
+### `ReanUI.init(width, height, postGUI?) -> root`
+Inicializa canvas/renderer y devuelve el nodo raíz.
 
-El punto de entrada para inicializar y gestionar el ciclo de vida de la aplicación.
+### `ReanUI.create(tag, attrs?, children?) -> UIElement`
+Factory declarativa de componentes.
 
-### `ReanUI.init(width, height)`
-Inicializa el motor y crea el nodo raíz.
-- **Parámetros**:
-  - `width` (number): Ancho inicial del lienzo.
-  - `height` (number): Alto inicial del lienzo.
-- **Retorno**: Instancia de `Container` (root).
+### `ReanUI.update(width?, height?, dt?)`
+Ejecuta animaciones, layout y render.
 
-### `ReanUI.create(tag, attrs, children)`
-Método factoría para crear componentes de forma declarativa.
-- **Parámetros**:
-  - `tag` (string): Identificador del componente ("button", "text", "div", etc).
-  - `attrs` (table): Tabla de atributos (`{ id = "myId", class = "myClass", style = "..." }`).
-  - `children` (table|string): Lista de elementos hijos o contenido textual.
-- **Retorno**: Instancia de `UIElement` (o subclase).
+### `ReanUI.loadStyle(css_string) -> ok, err?`
+Parsea y aplica CSS global por selectores.
 
-### `ReanUI.update(width, height, dt)`
-Procesa el layout y prepara el frame para el renderizado.
-- **Parámetros**:
-  - `width`, `height`: Dimensiones actuales (para resize).
-  - `dt` (number): Tiempo transcurrido (para animaciones).
+### `ReanUI.setTheme(name) -> boolean`
+Cambia el tema activo.
 
----
+### `ReanUI.getThemeVariable(name, fallback?)`
+Resuelve variables del tema (`var(--name)`).
 
-## 🧩 Clase Base: `UIElement`
+### `ReanUI.handleMouseEvent(event_type, ...)`
+Bridge de mouse (`move`, `button`, `wheel`) hacia `InteractionManager`.
 
-Todos los componentes heredan de esta clase.
+### `ReanUI.handleKeyboardEvent(event_type, key, state)`
+Bridge de teclado (`onClientKey`).
 
-### Métodos del DOM
-- `appendChild(child)`: Añade un hijo al final de la lista.
-- `removeChild(child)`: Elimina un hijo específico.
-- `getParent()` / `getChildren()`: Navegación por el árbol.
-- `destroy()`: Elimina el elemento y limpia sus recursos.
+### `ReanUI.handleCharacterEvent(char)`
+Bridge de caracteres (`onClientCharacter`).
 
-### Estilo y Clases
-- `setStyle(property, value)`: Cambia una propiedad CSS individual.
-- `setStyleSheet(css_string)`: Aplica un bloque completo de CSS.
-- `addClass(name)` / `removeClass(name)`: Gestión de clases para selectores.
+## `UIElement` (base de todos los componentes)
+
+### Árbol y ciclo de vida
+- `appendChild(child)`
+- `removeChild(child)`
+- `getParent()`, `getChildren()`, `getChildCount()`
+- `destroy()`, `isDestroyed()`
+
+### Estilo
+- `setStyle(prop, value)`
+- `getStyle(prop)`
+- `setStyleSheet(css_block)`
+- `getAllStyles()`
+
+### Clases/atributos
+- `setId(id)`, `getId()`, `getUid()`, `getTag()`
+- `addClass(classes)`, `removeClass(classes)`, `hasClass(name)`, `getClasses()`
+- `setData(key, value)`, `getData(key)`
 
 ### Eventos
-- `addEventListener(type, callback, useCapture)`: Registra un listener.
-- `removeEventListener(type, callback)`: Elimina un listener.
-- `dispatchEvent(type, data)`: Dispara un evento personalizado.
+- `addEventListener(type, callback, options?)`
+- `removeEventListener(type, callback, capture?)`
+- `dispatchEvent(type, data?)`
+- Alias de compatibilidad: `on`, `off`, `once`
 
----
+### Interacción
+- `setFocusable(bool)`, `isFocusable()`
+- `focus()`, `blur()`
 
-## 🎨 Propiedades CSS Soportadas
+### Animación
+- `animate(props, duration_ms, easing?, onComplete?)`
 
-ReanUI soporta una whitelist de propiedades optimizadas:
+## Sistema de eventos (`src/event/EventSystem.lua`)
 
-- **Layout**: `width`, `height`, `margin`, `padding`, `display` (flex/block), `z-index`, `gap`.
-- **Flexbox**: `flex-direction`, `justify-content`, `align-items`, `flex-grow`, `flex-basis`.
-- **Visual**: `color`, `background-color`, `border-radius`, `opacity`.
-- **Sombra**: `shadow-color`, `shadow-blur`.
+### Fases
+1. `CAPTURING`
+2. `AT_TARGET`
+3. `BUBBLING`
 
----
+### Objeto `Event`
+- Campos: `type`, `data`, `target`, `currentTarget`, `eventPhase`, `bubbles`, `cancelable`.
+- Métodos: `stopPropagation`, `stopImmediatePropagation`, `preventDefault`.
 
-## 🖱️ Sistema de Eventos
+### `addEventListener` opciones
+- `capture` (bool)
+- `once` (bool)
+- `passive` (bool, reservado)
 
-ReanUI implementa el flujo estándar del W3C:
+## InteractionManager (`src/core/InteractionManager.lua`)
 
-1.  **Phase 1 (Capturing)**: El evento baja desde el Root hasta el Target.
-2.  **Phase 2 (Target)**: Se ejecuta en el elemento emisor.
-3.  **Phase 3 (Bubbling)**: El evento sube desde el Target hasta el Root.
+- Hit-testing por layout.
+- Focus único global.
+- Teclado se envía solo al elemento enfocado.
+- Normalización de estado de tecla (`true/false` y `down/up`).
+- TAB para navegación de foco.
 
-### Eventos del Sistema
-- `click`, `dblclick`: Interacciones de ratón.
-- `mouseenter`, `mouseleave`: Hover.
-- `input`, `change`: Para componentes de entrada como `Input` o `Checkbox`.
-- `scroll`: Disparado por componentes con overflow.
-
----
-
-## 📦 Catálogo de Componentes
+## Componentes
 
 ### `Button`
-Contenedor clickeable con estados de hover automáticos.
-- **Eventos**: `click`.
+- API principal: `onClick`, `press`, `setDisabled`.
+- Compatibilidad legacy: `disable`, `enable`, `getState`, `onMouseEnter`, `onMouseLeave`, `onMouseDown`, `onMouseUp`.
 
 ### `Input`
-Campo de texto editable.
-- **Propiedades**: `:getValue()`, `:setValue(text)`.
-- **Eventos**: `input`, `focus`, `blur`.
+- Valor: `getValue`, `setValue`, `clear`.
+- Cursor: `setCursorPosition`, `getCursorPosition`, `moveCursor`.
+- Edición: `appendChar`, `backspace`, `deleteForward`.
+- Validación: `validate() -> boolean, message`, `isValid`, `getError`.
+- Caret: `updateCaretBlink`, `isCaretVisible`.
 
-### `Scrollbox`
-Contenedor con soporte para scroll y recorte (clipping).
-- **CSS**: `overflow: scroll`.
+### `Checkbox`
+- Estado: `isChecked`, `setChecked`, `toggle`.
+- Eventos: `onChange`.
+- Compatibilidad: `press`.
 
 ### `ProgressBar`
-Visualizador de progreso numérico.
-- **Propiedades**: `:setProgress(0-100)`.
+- `setProgress(0..100)`, `getProgress`.
+
+### `Scrollbox`
+- Scroll por rueda (`mousewheel`) + clipping.
+
+## Animaciones (`src/core/AnimationManager.lua`)
+
+- API en milisegundos (`animate`).
+- Motor interno en segundos (`tick(dt_seconds)`).
+- Interpolación:
+- Colores HEX (`#RRGGBB`)
+- Dimensiones (`px`, `%`)
+- Números (`opacity`, `z-index`, etc.)
+- Limpieza automática de animaciones completadas + callback `onComplete`.
+
+## Renderer y Canvas
+
+### `Renderer`
+- Recolección de drawables por dirty flag.
+- Orden por `z-index`.
+- Render de input con texto/placeholder + caret.
+
+### `MtaCanvas`
+- `drawRect`, `drawText`, `drawImage`, `drawShader`.
+- Render targets cacheados por `uid`:
+- `pushRenderTarget(uid,w,h)`
+- `popRenderTarget()`
+- `drawCachedElement(element, drawFn)`
+- Recuperación de contexto DX: `onClientRestore`.
+
+## Temas
+
+Variables base recomendadas:
+- `--primary-color`
+- `--bg-color`
+- `--bg-alt`
+- `--text-color`
+- `--text-muted`
+- `--border-color`
+- `--shadow-color`
+
+## Runtime
+
+- ReanUI está definido para ejecutarse en modo 100% Lua.
+- El parser CSS usado en runtime es `src/parser/css_parser.lua`.

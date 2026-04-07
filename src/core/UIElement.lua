@@ -1,9 +1,12 @@
 --- @class UIElement
 --- Clase raíz de todos los componentes visuales de ReanUI.
 --- Implementa la composición básica: EventTarget + StyleManager + Jerarquía DOM.
-local UIElement = {}
-UIElement.__index = UIElement
+local EventSystem = require("src.event.EventSystem")
+local StyleManager = require("src.core.StyleManager")
 
+local UIElement = {}
+setmetatable(UIElement, { __index = EventSystem.EventTarget })
+UIElement.__index = UIElement
 -- Auto-incremento global thread-safe (dentro de un mismo lua_State)
 local _next_id = 0
 local function generate_id()
@@ -24,7 +27,9 @@ function UIElement.new(tag, attrs)
         error("[ReanUI:UIElement] tag must be a non-empty string.")
     end
 
-    local self = setmetatable({}, UIElement)
+    -- Crear base EventTarget para heredar almacenamiento/listeners canónicos.
+    local self = EventSystem.EventTarget.new()
+    setmetatable(self, UIElement)
 
     -- Identidad
     self._uid       = generate_id()
@@ -34,7 +39,6 @@ function UIElement.new(tag, attrs)
     self._data      = {}           -- Atributos data-*
 
     -- Composición (Delegación a módulos especializados)
-    self._listeners = {}           -- Almacén de EventTarget
     self._style     = StyleManager.new()
     self._dirty     = true         -- Requiere re-dibujado
     self._child_dirty = false      -- Algún descendiente requiere re-dibujado
@@ -343,17 +347,39 @@ end
 -- EVENTOS (EventTarget Implementation)
 -- ============================================================================
 
-function UIElement:addEventListener(type, callback, options)
-    return EventSystem.EventTarget.addEventListener(self, type, callback, options)
+--- Alias de compatibilidad (API estilo EventEmitter).
+--- @param type string
+--- @param callback function
+--- @param options table|boolean|nil
+--- @return UIElement self
+function UIElement:on(eventType, callback, options)
+    self:addEventListener(eventType, callback, options)
+    return self
 end
 
-function UIElement:removeEventListener(type, callback, capture)
-    return EventSystem.EventTarget.removeEventListener(self, type, callback, capture)
+--- Alias de compatibilidad (API estilo EventEmitter).
+--- @param type string
+--- @param callback function
+--- @param capture boolean|nil
+--- @return UIElement self
+function UIElement:off(eventType, callback, capture)
+    self:removeEventListener(eventType, callback, capture)
+    return self
 end
 
-function UIElement:getListeners(type)
-    return EventSystem.EventTarget.getListeners(self, type)
+--- Compatibilidad con listener de una sola ejecución.
+--- @param type string
+--- @param callback function
+--- @param options table|nil
+--- @return UIElement self
+function UIElement:once(eventType, callback, options)
+    local opt = type(options) == "table" and options or {}
+    opt.once = true
+    self:addEventListener(eventType, callback, opt)
+    return self
 end
+
+
 
 --- Dispara un evento usando el despachador centralizado (soporta propagación).
 --- @param type string Nombre del evento

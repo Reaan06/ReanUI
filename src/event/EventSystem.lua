@@ -21,13 +21,14 @@ local Event = {}
 Event.__index = Event
 
 --- Crea una nueva instancia de Evento.
---- @tparam string type Nombre del evento (ej: "click", "mouseenter").
+--- @tparam string event_type Nombre del evento (ej: "click", "mouseenter").
 --- @tparam table|nil data Datos personalizados asociados al evento.
 --- @treturn Event Instancia del evento.
-function Event.new(type, data)
+function Event.new(event_type, data)
+    local payload = data or {}
     local self = setmetatable({
-        type = type,
-        data = data or {},
+        type = event_type,
+        data = payload,
         target = nil,             -- El elemento que disparó el evento
         currentTarget = nil,      -- El elemento que está procesando el evento ahora
         eventPhase = EventSystem.PHASE.NONE,
@@ -39,6 +40,17 @@ function Event.new(type, data)
         _immediateStopped = false, -- stopImmediatePropagation()
         _defaultPrevented = false  -- preventDefault()
     }, Event)
+
+    -- Compatibilidad: exponer payload también en el nivel raíz del evento
+    -- (ej: event.key además de event.data.key).
+    if type(payload) == "table" then
+        for k, v in pairs(payload) do
+            if self[k] == nil then
+                self[k] = v
+            end
+        end
+    end
+
     return self
 end
 

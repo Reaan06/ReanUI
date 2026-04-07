@@ -19,6 +19,21 @@ function Renderer.new()
     return self
 end
 
+local function parseNumber(value, default)
+    local n = tonumber(value)
+    if n then return n end
+    if type(value) == "string" then
+        n = tonumber(value:match("([%+%-]?[%d%.]+)"))
+        if n then return n end
+    end
+    return default or 0
+end
+
+local function parseBorderWidth(borderValue)
+    if type(borderValue) ~= "string" then return 0 end
+    return parseNumber(borderValue:match("^%s*([%+%-]?[%d%.]+)"), 0)
+end
+
 -- ============================================================================
 -- CORE RENDERING
 -- ============================================================================
@@ -51,18 +66,36 @@ local function collect_drawables(node, parent_clip, result, cache)
         end
     end
 
+    if node:getTag() == "input" and node.updateCaretBlink then
+        node:updateCaretBlink()
+    end
+
     -- 2. RECONSTRUIR DRAWABLE SI ES DIRTY
     local node_drawables = {}
     
     if node._dirty then
         -- Crear Drawable principal (Fondo/Rect)
         local bg_color = styles["background-color"]
-        if bg_color and bg_color ~= "transparent" then
-            local rect = Drawable.Rect(
-                layout.x, layout.y, layout.w, layout.h, 
-                bg_color, 
-                tonumber(styles["border-radius"]) or 0
+        local radius = tonumber(styles["border-radius"]) or 0
+        local borderWidth = parseBorderWidth(styles["border"])
+        local borderColor = styles["border-color"]
+
+        if node:getTag() == "input" and borderWidth > 0 and borderColor then
+            local outer = Drawable.Rect(layout.x, layout.y, layout.w, layout.h, borderColor, radius)
+            table.insert(node_drawables, outer)
+
+            local inset = borderWidth
+            local inner = Drawable.Rect(
+                layout.x + inset,
+                layout.y + inset,
+                math.max(0, layout.w - inset * 2),
+                math.max(0, layout.h - inset * 2),
+                bg_color or "transparent",
+                math.max(0, radius - inset)
             )
+            table.insert(node_drawables, inner)
+        elseif bg_color and bg_color ~= "transparent" then
+            local rect = Drawable.Rect(layout.x, layout.y, layout.w, layout.h, bg_color, radius)
             table.insert(node_drawables, rect)
         end
 
@@ -88,6 +121,37 @@ local function collect_drawables(node, parent_clip, result, cache)
                 tonumber(styles["font-size"])
             )
             table.insert(node_drawables, text)
+        end
+
+        -- Render específico de Input: valor/placeholder + caret
+        if node:getTag() == "input" then
+            local textSize = tonumber(styles["font-size"]) or 16
+            local padLeft = node.getPaddingLeft and node:getPaddingLeft() or 8
+            local textX = layout.x + padLeft + borderWidth
+            local textY = layout.y + math.max(0, (layout.h - textSize) / 2)
+
+            local displayValue = node.getDisplayValue and node:getDisplayValue() or tostring(node._value or "")
+            local hasValue = type(displayValue) == "string" and displayValue ~= ""
+            local textColor = hasValue and (styles["color"] or "#ffffff") or (styles["placeholder-color"] or "#9ca3af")
+            local content = hasValue and displayValue or tostring(node._placeholder or "")
+
+            local text = Drawable.Text(textX, textY, content, textColor, textSize)
+            table.insert(node_drawables, text)
+
+            if node.isCaretVisible and node:isCaretVisible() then
+                local cursorPos = node.getCursorPosition and node:getCursorPosition() or #(node._value or "")
+                local caretCharWidth = textSize * 0.56
+                local caretX = textX + (cursorPos * caretCharWidth)
+                local caret = Drawable.Rect(
+                    caretX,
+                    layout.y + borderWidth + 6,
+                    1,
+                    math.max(8, layout.h - (borderWidth * 2) - 12),
+                    styles["color"] or "#ffffff",
+                    0
+                )
+                table.insert(node_drawables, caret)
+            end
         end
 
         -- Aplicar SHADER si el nodo lo tiene

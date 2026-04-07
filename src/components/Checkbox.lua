@@ -37,6 +37,10 @@ function Checkbox.new(checked, attrs)
         self:setStyle("border-color", "var(--rean-accent)")
     end
 
+    self:addEventListener("click", function(e)
+        self:toggle()
+    end)
+
     return self
 end
 
@@ -86,10 +90,13 @@ function Checkbox:onChange(callback)
     return self
 end
 
--- Simulación manual de interactividad
+--- Compatibilidad con tests legacy: simula un click del usuario.
 function Checkbox:press()
-    return self:toggle()
+    self:dispatchEvent("click", { source = "press" })
+    return self
 end
+
+
 
 -- ============================================================================
 -- OVERRIDES

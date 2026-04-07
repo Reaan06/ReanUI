@@ -38,10 +38,9 @@
     <script src="demo_client.lua" type="client" />
     <file src="stylesheet.css" />
 
-    <!-- ASSETS & BINARIES -->
+    <!-- ASSETS -->
     <file src="src/renderer/shaders/rounded_rect.fx" />
     <file src="assets/shaders/blur.fx" />
-    <file src="build/libreanui.so" /> <!-- CSS Parser Binary (Server-side compatible) -->
 
     <!-- ACL / SETTINGS -->
     <settings>

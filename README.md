@@ -1,145 +1,125 @@
-# ReanUI 🚀
+# ReanUI
 
-**ReanUI** es un framework de interfaces de usuario (UI) de alto rendimiento para Lua, diseñado con un núcleo acelerado en C y un sistema de diseño basado en estándares de la web (CSS y Flexbox). 
+Framework de UI para Lua con arquitectura modular: eventos tipo DOM (capture/target/bubble), layout flexbox, renderer con dirty-flagging, temas y backend MTA.
 
-Resuelve el problema de la complejidad y el bajo rendimiento en sistemas de UI tradicionales mediante un motor de renderizado con **Dirty-Flagging**, un sistema de eventos con **propagación completa** (bubbling/capturing) y un motor de **layout profesional** inspirado en Flexbox.
+## Estado del proyecto
+- Motor de eventos unificado (`src/event/EventSystem.lua`).
+- Animaciones refactorizadas con tiempo interno en segundos (`src/core/AnimationManager.lua`).
+- Input funcional con foco, cursor, edición por teclado y validación visual inmediata (`src/components/Input.lua`).
+- Backend MTA con render targets, shaders y recuperación en `onClientRestore` (`src/renderer/MtaCanvas.lua`).
+- Runtime oficial 100% Lua para MTA.
 
-## 📋 Requisitos Previos
+## Requisitos
+- Lua 5.x (se recomienda Lua 5.4 o LuaJIT para integración en juegos).
 
-ReanUI utiliza un núcleo híbrido **C/Lua** para garantizar la máxima velocidad de renderizado. Para empezar, necesitas:
-
--   **Lua 5.1 / 5.4 / LuaJIT**: El motor principal del framework.
--   **CMake 3.14+**: Para la gestión de compilación y descarga de dependencias nativas.
--   **Compilador C99**: (GCC >= 7.0, Clang o MSVC 2019+) para compilar el motor de layout y CSS.
--   **Git**: Necesario para que CMake descargue automáticamente la librería `lexbor`.
-
-## ⚙️ Instalación Paso a Paso
-
-El proceso de instalación compila el núcleo nativo y configura el entorno para que Lua pueda cargar las librerías.
-
-### 1. Clonar el repositorio
+## Instalación rápida
 ```bash
 git clone https://github.com/reaan/ReanUI.git
 cd ReanUI
 ```
 
-### 2. Compilar el núcleo nativo (C)
-ReanUI utiliza CMake para automatizar la descarga de `lexbor` y la compilación de los bridges de Lua.
+## Variables de entorno sugeridas
 ```bash
-mkdir build && cd build
-cmake .. -DCMAKE_BUILD_TYPE=Release
-cmake --build .
-```
-Esto generará `libreanui.so` (Linux), `libreanui.dylib` (macOS) o `reanui.dll` (Windows).
-
-### 3. Configurar el acceso desde Lua
-Para que tus scripts reconozcan ReanUI, debes indicarle a Lua dónde buscar los archivos fuente y los binarios compilados:
-
-```bash
-# Desde la raíz del proyecto
 export LUA_PATH="./?.lua;./src/?.lua;;"
-export LUA_CPATH="./build/?.so;;"
 ```
 
-## 🚀 Inicio Rápido
-
+## Inicio rápido
 ```lua
 local ReanUI = require("src.ReanUI")
 
--- 1. Inicializar con las dimensiones de la pantalla
 local root = ReanUI.init(800, 600)
 
--- 2. Crear un componente con estilos CSS
-local btn = ReanUI.create("button", { id = "main-btn" }, "¡Haz clic!")
-btn:setStyleSheet([[
-    background-color: #2D3748;
-    color: #FFFFFF;
-    width: 200px;
-    height: 50px;
-    border-radius: 8px;
-    justify-content: center;
-]])
+local input = ReanUI.create("input", {
+    id = "email",
+    placeholder = "Email"
+})
 
--- 3. Gestionar eventos
-btn:addEventListener("click", function(e)
-    print("Botón pulsado!")
+input:addEventListener("submit", function(e)
+    print("Submit:", e.value)
 end)
 
--- 4. Añadir al árbol y actualizar
-root:appendChild(btn)
-ReanUI.update(800, 600, 0.016) -- Basado en tu frame time
+root:appendChild(input)
+ReanUI.update(800, 600, 1/60)
 ```
 
-## 📂 Estructura del Proyecto
+## Arquitectura (resumen)
+- `src/core`: núcleo (`UIElement`, animaciones, interacción).
+- `src/event`: sistema de eventos con fases.
+- `src/layout`: layout flexbox.
+- `src/components`: componentes (`Button`, `Input`, `Checkbox`, etc.).
+- `src/renderer`: renderer y backend MTA.
+- `src/theme`: temas y resolución de variables CSS.
+- `src/parser`: parser CSS en Lua.
 
-| Carpeta | Descripción |
-| :--- | :--- |
-| `src/core` | Núcleo del motor: Gestión de memoria, clases base (UIElement) y estilos. |
-| `src/components` | Catálogo de componentes UI (Button, Input, Scrollbox, etc.). |
-| `src/layout` | Motor de cálculo de geometría (Flexbox). |
-| `src/renderer` | Sistema de dibujo, gestión de primitivas y clipping. |
-| `src/event` | Sistema de eventos avanzado (DOM-like). |
-| `src/theme` | Gestor de temas globales y variables CSS. |
-| `src/bridge` | Enlace nativo entre Lua y C. |
-| `tests` | Suite de pruebas automatizadas. |
+## Eventos
+- API principal: `addEventListener`, `removeEventListener`, `dispatchEvent`.
+- Compatibilidad: `on`, `off`, `once` en `UIElement`.
+- Fases soportadas:
+1. Capture
+2. Target
+3. Bubble
 
-## 🌐 Variables de Entorno
+## Input y teclado
+- Solo el elemento con foco recibe teclado (`InteractionManager`).
+- Soporta: `character`, `backspace`, `delete`, `arrow_l`, `arrow_r`, `home`, `end`, `enter`.
+- Incluye caret parpadeante y estado visual de validación (error/success).
 
-| Variable | Descripción | Ejemplo | Obligatoria |
-| :--- | :--- | :--- | :--- |
-| `LUA_PATH` | Ruta para localizar módulos Lua de ReanUI. | `./?.lua;;` | Sí |
-| `LUA_CPATH` | Ruta para localizar la librería nativa (`.so`/`.dll`). | `./build/?.so;;` | Sí (si no está en path) |
+## MTA backend
+`src/renderer/MtaCanvas.lua` implementa:
+- `drawRect`, `drawText`, `drawImage`.
+- `pushRenderTarget(uid,w,h)` / `popRenderTarget()`.
+- Cache por `uid` + dirty redraw.
+- `applyShader(shaderPath, params)`.
+- Restauración de recursos con `onClientRestore`.
 
-## 🧪 Ejecución de Tests
-
-ReanUI utiliza una suite de pruebas integrada que puedes ejecutar individualmente:
-
+## Tests
+Ejecutar un test individual:
 ```bash
-# Ejemplo: Probar el sistema de eventos
-lua tests/test_event_propagation.lua
-
-# Ejemplo: Probar el rendimiento del renderer
-lua tests/test_renderer_perf.lua
+lua tests/test_interaction.lua
 ```
 
-## 🎮 Instalación como Recurso MTA:SA
+Ejecutar toda la suite:
+```bash
+cat > /tmp/rean_all_tests.txt <<'EOF'
+test.lua
+test_components.lua
+test_css.lua
+test_flexbox.lua
+test_layout.lua
+test_uielement.lua
+tests/test_advanced_themes.lua
+tests/test_animations.lua
+tests/test_button_full.lua
+tests/test_checkbox.lua
+tests/test_event_propagation.lua
+tests/test_global_themes.lua
+tests/test_input_validation.lua
+tests/test_interaction.lua
+tests/test_css_parser.lua
+tests/test_progress.lua
+tests/test_renderer_perf.lua
+tests/test_scrollbox.lua
+tests/test_utils.lua
+EOF
 
-ReanUI está diseñado para ser usado directamente como un recurso en **Multi Theft Auto: San Andreas**. Sigue estos pasos para integrarlo en tu servidor:
-
-### 1. Preparar el Recurso
-Copia la carpeta raíz de **ReanUI** en el directorio de recursos de tu servidor:
-`server/mods/deathmatch/resources/[interfaz]/reanui/`
-
-### 2. Configurar el meta.xml
-El archivo `meta.xml` ya viene preconfigurado en la raíz. Si deseas integrar ReanUI dentro de otro recurso, asegúrate de incluir los scripts del núcleo en el orden correcto (ver `meta.xml` de referencia).
-
-### 3. Uso Básico (Client-side)
-```lua
--- En tu script cliente de MTA:
-local sw, sh = getScreenSize()
-local root = ReanUI.init(sw, sh)
-
--- Carga un estilo CSS externo
-local file = fileOpen("stylesheet.css")
-if file then
-    local css = fileRead(file, fileGetSize(file))
-    fileClose(file)
-    pcall(function() ReanUI.loadStyle(css) end)
-end
-
--- Crea y añade un elemento usando las clases de estilo
-local btn = ReanUI.create("button", { class = "btn-primary" }, "¡Hola MTA Glassmorphism!")
-root:appendChild(btn)
+fail=0
+while IFS= read -r t; do
+  [ -z "$t" ] && continue
+  echo "===== RUN $t ====="
+  lua "$t" || fail=1
+done < /tmp/rean_all_tests.txt
+exit $fail
 ```
 
-## 🧪 Ejecución de Tests y Demos (Glassmorphism)
+## MTA como recurso
+1. Copia el proyecto en `resources/[ui]/reanui`.
+2. Verifica `meta.xml`.
+3. Inicia con `start reanui`.
 
-ReanUI incluye una demo interactiva para MTA con un diseño **Glassmorphism Premium** que puedes iniciar inmediatamente:
+## Documentación API
+Referencia técnica: [API_GUIDE.md](/home/reaan/ReanUI/ReanUI/API_GUIDE.md)
 
-1.  Asegúrate de que la carpeta del recurso se llame `reanui`.
-2.  En la consola de comandos de MTA (F8) o del servidor, escribe: `start reanui`.
-3.  Verás una interfaz moderna en el centro de tu pantalla, que incluye un panel translúcido, campos de texto interactivos, botones reactivos y efectos de shader de desenfoque de fondo en tiempo real.
-
-## 🤝 Contribución
-
-Las contribuciones son bienvenidas. Asegúrate de que tu código siga los estándares de documentación inline (LDoc) y que todos los tests pasen antes de enviar un Pull Request.
+## Contribución
+- Mantener estilo de código y comentarios claros.
+- Añadir/actualizar tests al cambiar comportamiento.
+- Evitar romper compatibilidad pública sin migración explícita.
