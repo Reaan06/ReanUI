@@ -1,0 +1,46 @@
+{
+	"sources" : 
+	[
+		{
+			"file" : "/home/reaan/ReanUI/ReanUI/build/_deps/lexbor-subbuild/CMakeFiles/lexbor-populate"
+		},
+		{
+			"file" : "/home/reaan/ReanUI/ReanUI/build/_deps/lexbor-subbuild/CMakeFiles/lexbor-populate.rule"
+		},
+		{
+			"file" : "/home/reaan/ReanUI/ReanUI/build/_deps/lexbor-subbuild/CMakeFiles/lexbor-populate-complete.rule"
+		},
+		{
+			"file" : "/home/reaan/ReanUI/ReanUI/build/_deps/lexbor-subbuild/lexbor-populate-prefix/src/lexbor-populate-stamp/lexbor-populate-build.rule"
+		},
+		{
+			"file" : "/home/reaan/ReanUI/ReanUI/build/_deps/lexbor-subbuild/lexbor-populate-prefix/src/lexbor-populate-stamp/lexbor-populate-configure.rule"
+		},
+		{
+			"file" : "/home/reaan/ReanUI/ReanUI/build/_deps/lexbor-subbuild/lexbor-populate-prefix/src/lexbor-populate-stamp/lexbor-populate-download.rule"
+		},
+		{
+			"file" : "/home/reaan/ReanUI/ReanUI/build/_deps/lexbor-subbuild/lexbor-populate-prefix/src/lexbor-populate-stamp/lexbor-populate-install.rule"
+		},
+		{
+			"file" : "/home/reaan/ReanUI/ReanUI/build/_deps/lexbor-subbuild/lexbor-populate-prefix/src/lexbor-populate-stamp/lexbor-populate-mkdir.rule"
+		},
+		{
+			"file" : "/home/reaan/ReanUI/ReanUI/build/_deps/lexbor-subbuild/lexbor-populate-prefix/src/lexbor-populate-stamp/lexbor-populate-patch.rule"
+		},
+		{
+			"file" : "/home/reaan/ReanUI/ReanUI/build/_deps/lexbor-subbuild/lexbor-populate-prefix/src/lexbor-populate-stamp/lexbor-populate-test.rule"
+		},
+		{
+			"file" : "/home/reaan/ReanUI/ReanUI/build/_deps/lexbor-subbuild/lexbor-populate-prefix/src/lexbor-populate-stamp/lexbor-populate-update.rule"
+		}
+	],
+	"target" : 
+	{
+		"labels" : 
+		[
+			"lexbor-populate"
+		],
+		"name" : "lexbor-populate"
+	}
+}
