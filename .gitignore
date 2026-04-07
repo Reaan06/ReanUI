@@ -1,14 +1,40 @@
-# Build y Binarios
+# --- Build & Binaries ---
+build/
+bin/
 *.so
 *.dll
 *.o
 *.a
-build/
-bin/
+*.lib
+*.exe
+*.out
+*.app
 
-# Dependencias (si usas local clones o fetchcontent)
-lexbor/
+# --- CMake Artifacts ---
+CMakeFiles/
+CMakeCache.txt
+CMakeScripts/
+Makefile
+cmake_install.cmake
+install_manifest.txt
+compile_commands.json
+_deps/
 
-# Editor
+# --- Lua & Runtime ---
+luac.out
+*.log
+render_data.json
+
+# --- OS & Editors ---
+.DS_Store
+Thumbs.db
 .vscode/
 .idea/
+*.swp
+*.swo
+*~
+.cache/
+
+# --- Project Specific ---
+lexbor/
+include/ReanUI/Style.h.gch

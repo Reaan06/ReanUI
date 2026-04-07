@@ -12,22 +12,21 @@ typedef struct {
 
 static int l_parse_css(lua_State *L) {
     const char* css_string = luaL_checkstring(L, 1);
-    
-    // Parse CSS to Node Tree
+
     Node* root = rui_parse_css(css_string);
     if (!root) {
         lua_pushnil(L);
-        return 1;
+        lua_pushstring(L, "[ReanUI] Failed to parse CSS: invalid or empty input.");
+        return 2;  /* Patrón estándar Lua: nil, mensaje_de_error */
     }
-    
-    // Bind root node to Userdata
+
     LuaNodeUserData *ud = (LuaNodeUserData *)lua_newuserdata(L, sizeof(LuaNodeUserData));
     luaL_getmetatable(L, "ReanUI_Node");
     lua_setmetatable(L, -2);
-    
+
     ud->node = root;
     ud->is_managed_by_lua = 1;
-    
+
     return 1;
 }
 

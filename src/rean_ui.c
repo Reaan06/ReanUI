@@ -57,17 +57,18 @@ static float parse_css_value(const char *start, const char *end, uint8_t *out_is
 // ============================================================================
 
 static ReanElement* rean_alloc_element(void) {
-    ReanElement* el = (ReanElement*)malloc(sizeof(ReanElement));
+    /* Usar rui_malloc para que el allocator centralizado pueda rastrear esta alloc */
+    ReanElement* el = (ReanElement*)rui_malloc(sizeof(ReanElement));
     if (el) {
-        el->id = 1; 
+        el->id = 1;
         el->is_managed_by_lua = 1;
         el->width = 0.0f; el->height = 0.0f;
         el->width_is_percent = 0; el->height_is_percent = 0;
         el->bg_color = 0;
-        
+
         el->computed_x = 0; el->computed_y = 0;
         el->computed_width = 0; el->computed_height = 0;
-        
+
         el->parent = NULL;
         el->children = NULL;
         el->num_children = 0;
@@ -76,17 +77,16 @@ static ReanElement* rean_alloc_element(void) {
     return el;
 }
 
+
 static void rean_free_element(ReanElement* el) {
     if (!el) return;
-    
-    // Destruye el arreglo C de punteros, pero NO destruye a los hijos en sí directamente
-    // (Lua asume el control del Memory Lifecycle de las instancias gracias a la OOP)
     if (el->children) {
-        free(el->children);
+        rui_free(el->children);
         el->children = NULL;
     }
-    free(el);
+    rui_free(el);
 }
+
 
 // ============================================================================
 // MOTOR DE LAYOUT BOX (ALTO RENDIMIENTO EN PROFUNDIDAD)
@@ -134,14 +134,28 @@ void rean_calculate_layout(ReanElement *node, float parent_x, float parent_y, fl
 // PARSER EXCLUSIVO CSS (UPDATE CON %)
 // ============================================================================
 
+/* Aplica una propiedad CSS parseada a un elemento. Extrae la duplicación del parser. */
+static void apply_css_property(ReanElement *el,
+                                const char *k_s, const char *k_e,
+                                const char *v_s, const char *v_e) {
+    size_t klen = (size_t)(k_e - k_s);
+    if (klen == 5 && strncmp(k_s, "width", 5) == 0) {
+        el->width = parse_css_value(v_s, v_e, &el->width_is_percent);
+    } else if (klen == 6 && strncmp(k_s, "height", 6) == 0) {
+        el->height = parse_css_value(v_s, v_e, &el->height_is_percent);
+    } else if (klen == 16 && strncmp(k_s, "background-color", 16) == 0) {
+        el->bg_color = parse_hex_color(v_s, v_e);
+    }
+}
+
 static void rean_parse_css_block(ReanElement *el, const char *css_string) {
     if (!css_string) return;
     const char *p = css_string;
     const char *key_start = p;
     const char *key_end = NULL;
     const char *val_start = NULL;
-    int state = 0; 
-    
+    int state = 0;
+
     while (*p) {
         if (state == 0) {
             if (*p == ':') {
@@ -154,33 +168,22 @@ static void rean_parse_css_block(ReanElement *el, const char *css_string) {
                 const char *k_s, *k_e, *v_s, *v_e;
                 str_trim(key_start, key_end, &k_s, &k_e);
                 str_trim(val_start, p, &v_s, &v_e);
-                
-                if (k_e - k_s == 5 && strncmp(k_s, "width", 5) == 0) {
-                    el->width = parse_css_value(v_s, v_e, &el->width_is_percent);
-                } else if (k_e - k_s == 6 && strncmp(k_s, "height", 6) == 0) {
-                    el->height = parse_css_value(v_s, v_e, &el->height_is_percent);
-                } else if (k_e - k_s == 16 && strncmp(k_s, "background-color", 16) == 0) {
-                    el->bg_color = parse_hex_color(v_s, v_e);
-                }
+                apply_css_property(el, k_s, k_e, v_s, v_e);
                 state = 0; key_start = p + 1;
             }
         }
         p++;
     }
-    
+
+    /* Manejar la última declaración sin punto y coma final */
     if (state == 1) {
         const char *k_s, *k_e, *v_s, *v_e;
         str_trim(key_start, key_end, &k_s, &k_e);
         str_trim(val_start, p, &v_s, &v_e);
-        if (k_e - k_s == 5 && strncmp(k_s, "width", 5) == 0) {
-            el->width = parse_css_value(v_s, v_e, &el->width_is_percent);
-        } else if (k_e - k_s == 6 && strncmp(k_s, "height", 6) == 0) {
-            el->height = parse_css_value(v_s, v_e, &el->height_is_percent);
-        } else if (k_e - k_s == 16 && strncmp(k_s, "background-color", 16) == 0) {
-            el->bg_color = parse_hex_color(v_s, v_e);
-        }
+        apply_css_property(el, k_s, k_e, v_s, v_e);
     }
 }
+
 
 // ============================================================================
 // LUA API INTERFACES (MÉTODOS OOP)

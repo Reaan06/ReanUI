@@ -1,3 +1,8 @@
+/**
+ * @file rean_ui.h
+ * @brief Core structures and API definitions for ReanUI Native Engine.
+ */
+
 #ifndef REAN_UI_H
 #define REAN_UI_H
 
@@ -6,36 +11,42 @@
 #include <lualib.h>
 #include <stdint.h>
 
-// Pre-declaración para auto-referenciar la jerarquía
+/**
+ * @struct ReanElement
+ * @brief Internal C structure representing a UI node in the DOM.
+ * Optimized for cache locality and fast layout calculations.
+ */
 typedef struct ReanElement ReanElement;
 
-// Estructura interna C (Box Model DOM Node)
 struct ReanElement {
-    int id;
+    int id; ///< Unique identifier for the element.
     
-    // Layout Inicial (Directivas del CSS pre-computadas)
-    float width;
-    float height;
-    uint8_t width_is_percent;  // Flag optimizada (1 = % , 0 = px)
-    uint8_t height_is_percent; // Flag optimizada (1 = % , 0 = px)
-    uint32_t bg_color;
+    /* Layout Directives (Pre-computed from CSS) */
+    float width;              ///< Desired width (px or %).
+    float height;             ///< Desired height (px or %).
+    uint8_t width_is_percent;  ///< Flag: 1 if width is %, 0 if px.
+    uint8_t height_is_percent; ///< Flag: 1 if height is %, 0 if px.
+    uint32_t bg_color;         ///< Background color in 0xRRGGBBAA format.
     
-    // Resultados del Motor Layout (Coordenadas de dibujado finales, ultra rápidas pre-frame)
-    float computed_x;
-    float computed_y;
-    float computed_width;
-    float computed_height;
+    /* Computed Layout Results (Final screen coordinates) */
+    float computed_x;      ///< Final X position in the screen.
+    float computed_y;      ///< Final Y position in the screen.
+    float computed_width;  ///< Final width in pixels.
+    float computed_height; ///< Final height in pixels.
     
-    // Relación de parentesco
-    ReanElement* parent;
-    ReanElement** children; // Arreglo Dinámico contiguo amigable en caché
-    int num_children;
-    int cap_children;
+    /* Hierarchy Management */
+    ReanElement* parent;      ///< Pointer to the parent node (NULL for root).
+    ReanElement** children;   ///< Dynamic array of pointers to child nodes.
+    int num_children;         ///< Current number of children.
+    int cap_children;         ///< Current capacity of the children array.
     
-    int is_managed_by_lua;
+    int is_managed_by_lua;    ///< Flag indicating if Lua GC should track this.
 };
 
-// Interface Userdata
+/**
+ * @struct ReanUserData
+ * @brief Lua Userdata structure for ReanElement wrapping.
+ */
 typedef struct {
     ReanElement* element;
 } ReanUserData;
@@ -46,6 +57,10 @@ typedef struct {
   #define REAN_API __attribute__((visibility("default")))
 #endif
 
+/**
+ * @brief Main entry point for the Lua module.
+ * Registers classes and global functions in the Lua state.
+ */
 REAN_API int luaopen_reanui(lua_State *L);
 
 #endif // REAN_UI_H

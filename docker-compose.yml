@@ -1,0 +1,8 @@
+services:
+  frontend:
+    image: nginx:alpine
+    container_name: reanui-final
+    ports:
+      - "5174:80"
+    volumes:
+      - .:/usr/share/nginx/html:rod
