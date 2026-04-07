@@ -1,0 +1,14 @@
+# Build y Binarios
+*.so
+*.dll
+*.o
+*.a
+build/
+bin/
+
+# Dependencias (si usas local clones o fetchcontent)
+lexbor/
+
+# Editor
+.vscode/
+.idea/
