@@ -1133,3 +1133,560 @@ events:
         - "/usr/pkg"
         - "/opt"
 ...
+
+---
+events:
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/usr/share/cmake/Modules/CheckFunctionExists.cmake:167 (try_compile)"
+      - "build/_deps/lexbor-src/feature.cmake:7 (CHECK_FUNCTION_EXISTS)"
+      - "build/_deps/lexbor-src/source/lexbor/core/config.cmake:11 (FEATURE_TRY_FUNCTION_EXISTS)"
+      - "build/_deps/lexbor-src/config.cmake:172 (include)"
+      - "build/_deps/lexbor-src/CMakeLists.txt:235 (INCLUDE_MODULE_CONFIG)"
+    checks:
+      - "Looking for ceil"
+    directories:
+      source: "/home/reaan/ReanUI/ReanUI/build/CMakeFiles/CMakeScratch/TryCompile-6sE4xv"
+      binary: "/home/reaan/ReanUI/ReanUI/build/CMakeFiles/CMakeScratch/TryCompile-6sE4xv"
+    cmakeVariables:
+      CMAKE_C_FLAGS: ""
+      CMAKE_C_FLAGS_DEBUG: "-g"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_POSITION_INDEPENDENT_CODE: "ON"
+    buildResult:
+      variable: "test_result"
+      cached: true
+      stdout: |
+        Change Dir: '/home/reaan/ReanUI/ReanUI/build/CMakeFiles/CMakeScratch/TryCompile-6sE4xv'
+        
+        Run Build Command(s): /usr/bin/cmake -E env VERBOSE=1 /usr/bin/make -f Makefile cmTC_ad724/fast
+        /usr/bin/make  -f CMakeFiles/cmTC_ad724.dir/build.make CMakeFiles/cmTC_ad724.dir/build
+        make[1]: Entering directory '/home/reaan/ReanUI/ReanUI/build/CMakeFiles/CMakeScratch/TryCompile-6sE4xv'
+        /bin/sh: warning: setlocale: LC_ALL: cannot change locale (en_US.UTF-8): No such file or directory
+        Building C object CMakeFiles/cmTC_ad724.dir/CheckFunctionExists.c.o
+        /usr/bin/cc   -DCHECK_FUNCTION_EXISTS=ceil -std=gnu99 -fPIE -o CMakeFiles/cmTC_ad724.dir/CheckFunctionExists.c.o -c /home/reaan/ReanUI/ReanUI/build/CMakeFiles/CMakeScratch/TryCompile-6sE4xv/CheckFunctionExists.c
+        <command-line>: warning: conflicting types for built-in function 'ceil'; expected 'double(double)' [-Wbuiltin-declaration-mismatch]
+        /home/reaan/ReanUI/ReanUI/build/CMakeFiles/CMakeScratch/TryCompile-6sE4xv/CheckFunctionExists.c:7:3: note: in expansion of macro 'CHECK_FUNCTION_EXISTS'
+            7 |   CHECK_FUNCTION_EXISTS(void);
+              |   ^~~~~~~~~~~~~~~~~~~~~
+        /home/reaan/ReanUI/ReanUI/build/CMakeFiles/CMakeScratch/TryCompile-6sE4xv/CheckFunctionExists.c:1:1: note: 'ceil' is declared in header '<math.h>'
+          +++ |+#include <math.h>
+            1 | #ifdef CHECK_FUNCTION_EXISTS
+        /bin/sh: warning: setlocale: LC_ALL: cannot change locale (en_US.UTF-8): No such file or directory
+        Linking C executable cmTC_ad724
+        /usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_ad724.dir/link.txt --verbose=1
+        /usr/bin/ld: CMakeFiles/cmTC_ad724.dir/CheckFunctionExists.c.o: in function `main':
+        CheckFunctionExists.c:(.text+0x10): undefined reference to `ceil'
+        collect2: error: ld returned 1 exit status
+        /usr/bin/cc  -DCHECK_FUNCTION_EXISTS=ceil CMakeFiles/cmTC_ad724.dir/CheckFunctionExists.c.o -o cmTC_ad724
+        make[1]: *** [CMakeFiles/cmTC_ad724.dir/build.make:102: cmTC_ad724] Error 1
+        make[1]: Leaving directory '/home/reaan/ReanUI/ReanUI/build/CMakeFiles/CMakeScratch/TryCompile-6sE4xv'
+        make: *** [Makefile:134: cmTC_ad724/fast] Error 2
+        
+      exitCode: 2
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/usr/share/cmake/Modules/CheckFunctionExists.cmake:167 (try_compile)"
+      - "build/_deps/lexbor-src/feature.cmake:14 (CHECK_FUNCTION_EXISTS)"
+      - "build/_deps/lexbor-src/source/lexbor/core/config.cmake:11 (FEATURE_TRY_FUNCTION_EXISTS)"
+      - "build/_deps/lexbor-src/config.cmake:172 (include)"
+      - "build/_deps/lexbor-src/CMakeLists.txt:235 (INCLUDE_MODULE_CONFIG)"
+    checks:
+      - "Looking for ceil"
+    directories:
+      source: "/home/reaan/ReanUI/ReanUI/build/CMakeFiles/CMakeScratch/TryCompile-MIxjoC"
+      binary: "/home/reaan/ReanUI/ReanUI/build/CMakeFiles/CMakeScratch/TryCompile-MIxjoC"
+    cmakeVariables:
+      CMAKE_C_FLAGS: ""
+      CMAKE_C_FLAGS_DEBUG: "-g"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_POSITION_INDEPENDENT_CODE: "ON"
+    buildResult:
+      variable: "test_result"
+      cached: true
+      stdout: |
+        Change Dir: '/home/reaan/ReanUI/ReanUI/build/CMakeFiles/CMakeScratch/TryCompile-MIxjoC'
+        
+        Run Build Command(s): /usr/bin/cmake -E env VERBOSE=1 /usr/bin/make -f Makefile cmTC_7c878/fast
+        /usr/bin/make  -f CMakeFiles/cmTC_7c878.dir/build.make CMakeFiles/cmTC_7c878.dir/build
+        make[1]: Entering directory '/home/reaan/ReanUI/ReanUI/build/CMakeFiles/CMakeScratch/TryCompile-MIxjoC'
+        /bin/sh: warning: setlocale: LC_ALL: cannot change locale (en_US.UTF-8): No such file or directory
+        Building C object CMakeFiles/cmTC_7c878.dir/CheckFunctionExists.c.o
+        /usr/bin/cc   -DCHECK_FUNCTION_EXISTS=ceil -std=gnu99 -fPIE -o CMakeFiles/cmTC_7c878.dir/CheckFunctionExists.c.o -c /home/reaan/ReanUI/ReanUI/build/CMakeFiles/CMakeScratch/TryCompile-MIxjoC/CheckFunctionExists.c
+        <command-line>: warning: conflicting types for built-in function 'ceil'; expected 'double(double)' [-Wbuiltin-declaration-mismatch]
+        /home/reaan/ReanUI/ReanUI/build/CMakeFiles/CMakeScratch/TryCompile-MIxjoC/CheckFunctionExists.c:7:3: note: in expansion of macro 'CHECK_FUNCTION_EXISTS'
+            7 |   CHECK_FUNCTION_EXISTS(void);
+              |   ^~~~~~~~~~~~~~~~~~~~~
+        /home/reaan/ReanUI/ReanUI/build/CMakeFiles/CMakeScratch/TryCompile-MIxjoC/CheckFunctionExists.c:1:1: note: 'ceil' is declared in header '<math.h>'
+          +++ |+#include <math.h>
+            1 | #ifdef CHECK_FUNCTION_EXISTS
+        /bin/sh: warning: setlocale: LC_ALL: cannot change locale (en_US.UTF-8): No such file or directory
+        Linking C executable cmTC_7c878
+        /usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_7c878.dir/link.txt --verbose=1
+        /usr/bin/cc  -DCHECK_FUNCTION_EXISTS=ceil CMakeFiles/cmTC_7c878.dir/CheckFunctionExists.c.o -o cmTC_7c878  -lm
+        make[1]: Leaving directory '/home/reaan/ReanUI/ReanUI/build/CMakeFiles/CMakeScratch/TryCompile-MIxjoC'
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "build/_deps/lexbor-src/feature.cmake:65 (try_compile)"
+      - "build/_deps/lexbor-src/CMakeLists.txt:314 (FEATURE_CHECK_ASAN)"
+    directories:
+      source: "/home/reaan/ReanUI/ReanUI/build/CMakeFiles/CMakeTmp"
+      binary: "/home/reaan/ReanUI/ReanUI/build/CMakeFiles/CMakeTmp"
+    cmakeVariables:
+      CMAKE_C_FLAGS: " -O2 -Wall -pedantic -pipe -std=c99 -fPIC"
+      CMAKE_C_FLAGS_DEBUG: "-g"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_POSITION_INDEPENDENT_CODE: "ON"
+    buildResult:
+      variable: "LEXBOR_HAVE_ASAN"
+      cached: true
+      stdout: |
+        Change Dir: '/home/reaan/ReanUI/ReanUI/build/CMakeFiles/CMakeTmp'
+        
+        Run Build Command(s): /usr/bin/cmake -E env VERBOSE=1 /usr/bin/make -f Makefile cmTC_e2bcc/fast
+        /usr/bin/make  -f CMakeFiles/cmTC_e2bcc.dir/build.make CMakeFiles/cmTC_e2bcc.dir/build
+        make[1]: Entering directory '/home/reaan/ReanUI/ReanUI/build/CMakeFiles/CMakeTmp'
+        /bin/sh: warning: setlocale: LC_ALL: cannot change locale (en_US.UTF-8): No such file or directory
+        Building C object CMakeFiles/cmTC_e2bcc.dir/feature_check.c.o
+        /usr/bin/cc   -O2 -Wall -pedantic -pipe -std=c99 -fPIC  -std=gnu99 -fPIE -o CMakeFiles/cmTC_e2bcc.dir/feature_check.c.o -c /home/reaan/ReanUI/ReanUI/build/feature_check.c
+        /home/reaan/ReanUI/ReanUI/build/feature_check.c: In function 'main':
+        /home/reaan/ReanUI/ReanUI/build/feature_check.c:19:1: error: expected expression before '}' token
+           19 | }
+              | ^
+        make[1]: *** [CMakeFiles/cmTC_e2bcc.dir/build.make:81: CMakeFiles/cmTC_e2bcc.dir/feature_check.c.o] Error 1
+        make[1]: Leaving directory '/home/reaan/ReanUI/ReanUI/build/CMakeFiles/CMakeTmp'
+        make: *** [Makefile:134: cmTC_e2bcc/fast] Error 2
+        
+      exitCode: 2
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "build/_deps/lexbor-src/feature.cmake:120 (try_compile)"
+      - "build/_deps/lexbor-src/CMakeLists.txt:319 (FEATURE_CHECK_MSAN)"
+    directories:
+      source: "/home/reaan/ReanUI/ReanUI/build/CMakeFiles/CMakeTmp"
+      binary: "/home/reaan/ReanUI/ReanUI/build/CMakeFiles/CMakeTmp"
+    cmakeVariables:
+      CMAKE_C_FLAGS: " -O2 -Wall -pedantic -pipe -std=c99 -fPIC"
+      CMAKE_C_FLAGS_DEBUG: "-g"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_POSITION_INDEPENDENT_CODE: "ON"
+    buildResult:
+      variable: "LEXBOR_HAVE_MSAN"
+      cached: true
+      stdout: |
+        Change Dir: '/home/reaan/ReanUI/ReanUI/build/CMakeFiles/CMakeTmp'
+        
+        Run Build Command(s): /usr/bin/cmake -E env VERBOSE=1 /usr/bin/make -f Makefile cmTC_0ead0/fast
+        /usr/bin/make  -f CMakeFiles/cmTC_0ead0.dir/build.make CMakeFiles/cmTC_0ead0.dir/build
+        make[1]: Entering directory '/home/reaan/ReanUI/ReanUI/build/CMakeFiles/CMakeTmp'
+        /bin/sh: warning: setlocale: LC_ALL: cannot change locale (en_US.UTF-8): No such file or directory
+        Building C object CMakeFiles/cmTC_0ead0.dir/feature_check.c.o
+        /usr/bin/cc   -O2 -Wall -pedantic -pipe -std=c99 -fPIC  -std=gnu99 -fPIE -o CMakeFiles/cmTC_0ead0.dir/feature_check.c.o -c /home/reaan/ReanUI/ReanUI/build/feature_check.c
+        /home/reaan/ReanUI/ReanUI/build/feature_check.c: In function 'main':
+        /home/reaan/ReanUI/ReanUI/build/feature_check.c:11:1: error: expected expression before '}' token
+           11 | }
+              | ^
+        make[1]: *** [CMakeFiles/cmTC_0ead0.dir/build.make:81: CMakeFiles/cmTC_0ead0.dir/feature_check.c.o] Error 1
+        make[1]: Leaving directory '/home/reaan/ReanUI/ReanUI/build/CMakeFiles/CMakeTmp'
+        make: *** [Makefile:134: cmTC_0ead0/fast] Error 2
+        
+      exitCode: 2
+  -
+    kind: "find-v1"
+    backtrace:
+      - "/usr/share/cmake/Modules/FindLua.cmake:267 (find_path)"
+      - "/usr/share/cmake/Modules/FindLua.cmake:299 (_lua_find_header)"
+      - "CMakeLists.txt:17 (find_package)"
+    mode: "path"
+    variable: "LUA_INCLUDE_DIR"
+    description: "Path to a file."
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: true
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "lua.h"
+    candidate_directories:
+      - "/usr/local/bin/include/"
+      - "/usr/local/bin/"
+      - "/usr/bin/include/"
+      - "/usr/bin/"
+      - "/bin/include/"
+      - "/bin/"
+      - "/usr/local/sbin/include/"
+      - "/usr/local/sbin/"
+      - "/home/reaan/.local/share/flatpak/exports/bin/include/"
+      - "/home/reaan/.local/share/flatpak/exports/bin/"
+      - "/usr/lib/jvm/default/bin/include/"
+      - "/usr/lib/jvm/default/bin/"
+      - "/usr/bin/site_perl/include/"
+      - "/usr/bin/site_perl/"
+      - "/usr/bin/vendor_perl/include/"
+      - "/usr/bin/vendor_perl/"
+      - "/usr/bin/core_perl/include/"
+      - "/usr/bin/core_perl/"
+      - "/usr/local/include/include/"
+      - "/usr/local/include/"
+      - "/usr/local/include/"
+      - "/usr/local/"
+      - "/usr/include/include/"
+      - "/usr/include/"
+      - "/usr/include/"
+      - "/usr/"
+      - "/include/include/"
+      - "/include/"
+      - "/usr/X11R6/include/include/"
+      - "/usr/X11R6/include/"
+      - "/usr/X11R6/include/"
+      - "/usr/X11R6/"
+      - "/usr/pkg/include/include/"
+      - "/usr/pkg/include/"
+      - "/usr/pkg/include/"
+      - "/usr/pkg/"
+      - "/opt/include/include/"
+      - "/opt/include/"
+      - "/opt/include/"
+      - "/opt/"
+      - "/usr/include/X11/include/"
+      - "/usr/include/X11/"
+    searched_directories:
+      - "/usr/local/bin/include/lua.h"
+      - "/usr/local/bin/lua.h"
+      - "/usr/bin/include/lua.h"
+      - "/usr/bin/lua.h"
+      - "/bin/include/lua.h"
+      - "/bin/lua.h"
+      - "/usr/local/sbin/include/lua.h"
+      - "/usr/local/sbin/lua.h"
+      - "/home/reaan/.local/share/flatpak/exports/bin/include/lua.h"
+      - "/home/reaan/.local/share/flatpak/exports/bin/lua.h"
+      - "/usr/lib/jvm/default/bin/include/lua.h"
+      - "/usr/lib/jvm/default/bin/lua.h"
+      - "/usr/bin/site_perl/include/lua.h"
+      - "/usr/bin/site_perl/lua.h"
+      - "/usr/bin/vendor_perl/include/lua.h"
+      - "/usr/bin/vendor_perl/lua.h"
+      - "/usr/bin/core_perl/include/lua.h"
+      - "/usr/bin/core_perl/lua.h"
+      - "/usr/local/include/include/lua.h"
+      - "/usr/local/include/lua.h"
+      - "/usr/local/include/lua.h"
+      - "/usr/local/lua.h"
+      - "/usr/include/include/lua.h"
+    found: "/usr/include/"
+    search_context:
+      ENV{PATH}:
+        - "/usr/local/bin"
+        - "/usr/bin"
+        - "/bin"
+        - "/usr/local/sbin"
+        - "/home/reaan/.local/share/flatpak/exports/bin"
+        - "/usr/lib/jvm/default/bin"
+        - "/usr/bin/site_perl"
+        - "/usr/bin/vendor_perl"
+        - "/usr/bin/core_perl"
+      CMAKE_INSTALL_PREFIX: "/usr/local"
+      CMAKE_SYSTEM_PREFIX_PATH:
+        - "/usr/local"
+        - "/usr"
+        - "/"
+        - "/usr"
+        - "/usr/local"
+        - "/usr/X11R6"
+        - "/usr/pkg"
+        - "/opt"
+      CMAKE_SYSTEM_INCLUDE_PATH:
+        - "/usr/include/X11"
+  -
+    kind: "find-v1"
+    backtrace:
+      - "/usr/share/cmake/Modules/FindLua.cmake:312 (find_library)"
+      - "CMakeLists.txt:17 (find_package)"
+    mode: "library"
+    variable: "LUA_LIBRARY"
+    description: "Path to a library."
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: true
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "lua55"
+      - "lua5.5"
+      - "lua-5.5"
+      - "lua.5.5"
+      - "lua"
+    candidate_directories:
+      - "/usr/local/bin/lib/"
+      - "/usr/local/bin/"
+      - "/usr/bin/lib/"
+      - "/usr/bin/"
+      - "/bin/lib/"
+      - "/bin/"
+      - "/usr/local/sbin/lib/"
+      - "/usr/local/sbin/"
+      - "/home/reaan/.local/share/flatpak/exports/bin/lib/"
+      - "/home/reaan/.local/share/flatpak/exports/bin/"
+      - "/usr/lib/jvm/default/bin/lib/"
+      - "/usr/lib/jvm/default/bin/"
+      - "/usr/bin/site_perl/lib/"
+      - "/usr/bin/site_perl/"
+      - "/usr/bin/vendor_perl/lib/"
+      - "/usr/bin/vendor_perl/"
+      - "/usr/bin/core_perl/lib/"
+      - "/usr/bin/core_perl/"
+      - "/usr/local/lib/lib/"
+      - "/usr/local/lib/"
+      - "/usr/local/lib/"
+      - "/usr/local/"
+      - "/usr/lib/lib/"
+      - "/usr/lib/"
+      - "/usr/lib/"
+      - "/usr/"
+      - "/lib/lib/"
+      - "/lib/"
+      - "/usr/X11R6/lib/lib/"
+      - "/usr/X11R6/lib/"
+      - "/usr/X11R6/lib/"
+      - "/usr/X11R6/"
+      - "/usr/pkg/lib/lib/"
+      - "/usr/pkg/lib/"
+      - "/usr/pkg/lib/"
+      - "/usr/pkg/"
+      - "/opt/lib/lib/"
+      - "/opt/lib/"
+      - "/opt/lib/"
+      - "/opt/"
+      - "/usr/lib/X11/lib/"
+      - "/usr/lib/X11/"
+    searched_directories:
+      - "/usr/local/bin/lib/"
+      - "/usr/local/bin/lib/"
+      - "/usr/local/bin/lib/"
+      - "/usr/local/bin/lib/"
+      - "/usr/local/bin/lib/"
+      - "/usr/local/bin/"
+      - "/usr/local/bin/"
+      - "/usr/local/bin/"
+      - "/usr/local/bin/"
+      - "/usr/local/bin/"
+      - "/usr/bin/lib/"
+      - "/usr/bin/lib/"
+      - "/usr/bin/lib/"
+      - "/usr/bin/lib/"
+      - "/usr/bin/lib/"
+      - "/usr/bin/"
+      - "/usr/bin/"
+      - "/usr/bin/"
+      - "/usr/bin/"
+      - "/usr/bin/"
+      - "/bin/lib/"
+      - "/bin/lib/"
+      - "/bin/lib/"
+      - "/bin/lib/"
+      - "/bin/lib/"
+      - "/bin/"
+      - "/bin/"
+      - "/bin/"
+      - "/bin/"
+      - "/bin/"
+      - "/usr/local/sbin/lib/"
+      - "/usr/local/sbin/lib/"
+      - "/usr/local/sbin/lib/"
+      - "/usr/local/sbin/lib/"
+      - "/usr/local/sbin/lib/"
+      - "/usr/local/sbin/"
+      - "/usr/local/sbin/"
+      - "/usr/local/sbin/"
+      - "/usr/local/sbin/"
+      - "/usr/local/sbin/"
+      - "/home/reaan/.local/share/flatpak/exports/bin/lib/"
+      - "/home/reaan/.local/share/flatpak/exports/bin/lib/"
+      - "/home/reaan/.local/share/flatpak/exports/bin/lib/"
+      - "/home/reaan/.local/share/flatpak/exports/bin/lib/"
+      - "/home/reaan/.local/share/flatpak/exports/bin/lib/"
+      - "/home/reaan/.local/share/flatpak/exports/bin/"
+      - "/home/reaan/.local/share/flatpak/exports/bin/"
+      - "/home/reaan/.local/share/flatpak/exports/bin/"
+      - "/home/reaan/.local/share/flatpak/exports/bin/"
+      - "/home/reaan/.local/share/flatpak/exports/bin/"
+      - "/usr/lib/jvm/default/bin/lib/"
+      - "/usr/lib/jvm/default/bin/lib/"
+      - "/usr/lib/jvm/default/bin/lib/"
+      - "/usr/lib/jvm/default/bin/lib/"
+      - "/usr/lib/jvm/default/bin/lib/"
+      - "/usr/lib/jvm/default/bin/"
+      - "/usr/lib/jvm/default/bin/"
+      - "/usr/lib/jvm/default/bin/"
+      - "/usr/lib/jvm/default/bin/"
+      - "/usr/lib/jvm/default/bin/"
+      - "/usr/bin/site_perl/lib/"
+      - "/usr/bin/site_perl/lib/"
+      - "/usr/bin/site_perl/lib/"
+      - "/usr/bin/site_perl/lib/"
+      - "/usr/bin/site_perl/lib/"
+      - "/usr/bin/site_perl/"
+      - "/usr/bin/site_perl/"
+      - "/usr/bin/site_perl/"
+      - "/usr/bin/site_perl/"
+      - "/usr/bin/site_perl/"
+      - "/usr/bin/vendor_perl/lib/"
+      - "/usr/bin/vendor_perl/lib/"
+      - "/usr/bin/vendor_perl/lib/"
+      - "/usr/bin/vendor_perl/lib/"
+      - "/usr/bin/vendor_perl/lib/"
+      - "/usr/bin/vendor_perl/"
+      - "/usr/bin/vendor_perl/"
+      - "/usr/bin/vendor_perl/"
+      - "/usr/bin/vendor_perl/"
+      - "/usr/bin/vendor_perl/"
+      - "/usr/bin/core_perl/lib/"
+      - "/usr/bin/core_perl/lib/"
+      - "/usr/bin/core_perl/lib/"
+      - "/usr/bin/core_perl/lib/"
+      - "/usr/bin/core_perl/lib/"
+      - "/usr/bin/core_perl/"
+      - "/usr/bin/core_perl/"
+      - "/usr/bin/core_perl/"
+      - "/usr/bin/core_perl/"
+      - "/usr/bin/core_perl/"
+      - "/usr/local/lib/lib/"
+      - "/usr/local/lib/lib/"
+      - "/usr/local/lib/lib/"
+      - "/usr/local/lib/lib/"
+      - "/usr/local/lib/lib/"
+      - "/usr/local/lib/"
+      - "/usr/local/lib/"
+      - "/usr/local/lib/"
+      - "/usr/local/lib/"
+      - "/usr/local/lib/"
+      - "/usr/local/lib/"
+      - "/usr/local/lib/"
+      - "/usr/local/lib/"
+      - "/usr/local/lib/"
+      - "/usr/local/lib/"
+      - "/usr/local/"
+      - "/usr/local/"
+      - "/usr/local/"
+      - "/usr/local/"
+      - "/usr/local/"
+      - "/usr/lib/lib/"
+      - "/usr/lib/lib/"
+      - "/usr/lib/lib/"
+      - "/usr/lib/lib/"
+      - "/usr/lib/lib/"
+      - "/usr/lib/"
+    found: "/usr/lib/liblua5.5.so"
+    search_context:
+      ENV{PATH}:
+        - "/usr/local/bin"
+        - "/usr/bin"
+        - "/bin"
+        - "/usr/local/sbin"
+        - "/home/reaan/.local/share/flatpak/exports/bin"
+        - "/usr/lib/jvm/default/bin"
+        - "/usr/bin/site_perl"
+        - "/usr/bin/vendor_perl"
+        - "/usr/bin/core_perl"
+      CMAKE_INSTALL_PREFIX: "/usr/local"
+      CMAKE_SYSTEM_PREFIX_PATH:
+        - "/usr/local"
+        - "/usr"
+        - "/"
+        - "/usr"
+        - "/usr/local"
+        - "/usr/X11R6"
+        - "/usr/pkg"
+        - "/opt"
+      CMAKE_SYSTEM_LIBRARY_PATH:
+        - "/usr/lib/X11"
+  -
+    kind: "find-v1"
+    backtrace:
+      - "/usr/share/cmake/Modules/FindLua.cmake:324 (find_library)"
+      - "CMakeLists.txt:17 (find_package)"
+    mode: "library"
+    variable: "LUA_MATH_LIBRARY"
+    description: "Path to a library."
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: true
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "m"
+    candidate_directories:
+      - "/usr/local/bin/"
+      - "/usr/bin/"
+      - "/bin/"
+      - "/usr/local/sbin/"
+      - "/home/reaan/.local/share/flatpak/exports/bin/"
+      - "/usr/lib/jvm/default/bin/"
+      - "/usr/bin/site_perl/"
+      - "/usr/bin/vendor_perl/"
+      - "/usr/bin/core_perl/"
+      - "/usr/local/lib/"
+      - "/usr/local/"
+      - "/usr/lib/"
+      - "/usr/"
+      - "/lib/"
+      - "/usr/X11R6/lib/"
+      - "/usr/X11R6/"
+      - "/usr/pkg/lib/"
+      - "/usr/pkg/"
+      - "/opt/lib/"
+      - "/opt/"
+      - "/usr/lib/X11/"
+    searched_directories:
+      - "/usr/local/bin/"
+      - "/usr/bin/"
+      - "/bin/"
+      - "/usr/local/sbin/"
+      - "/home/reaan/.local/share/flatpak/exports/bin/"
+      - "/usr/lib/jvm/default/bin/"
+      - "/usr/bin/site_perl/"
+      - "/usr/bin/vendor_perl/"
+      - "/usr/bin/core_perl/"
+      - "/usr/local/lib/"
+      - "/usr/local/"
+    found: "/usr/lib/libm.so"
+    search_context:
+      ENV{PATH}:
+        - "/usr/local/bin"
+        - "/usr/bin"
+        - "/bin"
+        - "/usr/local/sbin"
+        - "/home/reaan/.local/share/flatpak/exports/bin"
+        - "/usr/lib/jvm/default/bin"
+        - "/usr/bin/site_perl"
+        - "/usr/bin/vendor_perl"
+        - "/usr/bin/core_perl"
+      CMAKE_INSTALL_PREFIX: "/usr/local"
+      CMAKE_SYSTEM_PREFIX_PATH:
+        - "/usr/local"
+        - "/usr"
+        - "/"
+        - "/usr"
+        - "/usr/local"
+        - "/usr/X11R6"
+        - "/usr/pkg"
+        - "/opt"
+      CMAKE_SYSTEM_LIBRARY_PATH:
+        - "/usr/lib/X11"
+...
