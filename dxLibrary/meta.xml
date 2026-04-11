@@ -1,0 +1,216 @@
+<meta>
+    <info author="ClawSuit" name="Modern-Library" type="script" version="1.5.3"/>
+    <oop>true</oop>
+
+
+    <!-- 
+        
+        ********* Collaborators ********* 
+
+            > PandFort - Designer
+
+        *********************************
+    -->
+	
+	<min_mta_version server="1.5.9-9" client='1.5.9-9'/>
+
+    <file src="cef/cef.html" type="client" cache="false"/>
+    <file src="cef/cef.css" type="client" cache="false"/>
+    <file src="cef/cef.js" type="client" cache="false"/>
+    <file src="cef/util.js" type="client" cache="false"/>
+
+    <script src="handler/themes.lua" type="client" cache="false"/>
+    <script src="handler/util.lua" type="client" cache="false"/>
+    <script src="handler/keys.lua" type="client" cache="false"/>
+    <script src="handler/events.lua" type="client" cache="false"/>
+    <script src="handler/element.lua" type="client" cache="false"/>
+    <script src="handler/update.lua" type="server" cache="false"/>
+
+    <script src="elements/window.lua" type="client" cache="false"/>
+    <script src="elements/button.lua" type="client" cache="false"/>
+    <script src="elements/edit.lua" type="client" cache="false"/>
+    <script src="elements/scroll.lua" type="client" cache="false"/>
+    <script src="elements/checkbox.lua" type="client" cache="false"/>
+    <script src="elements/list.lua" type="client" cache="false"/>
+    <script src="elements/gridlist.lua" type="client" cache="false"/>
+    <script src="elements/progressbar.lua" type="client" cache="false"/>
+    <script src="elements/label.lua" type="client" cache="false"/>
+    <script src="elements/image.lua" type="client" cache="false"/>
+    <script src="elements/switchButton.lua" type="client" cache="false"/>
+    <script src="elements/tab.lua" type="client" cache="false"/>
+    <script src="elements/scrollpane.lua" type="client" cache="false"/>
+    <script src="elements/radiobutton.lua" type="client" cache="false"/>
+    <script src="elements/memo.lua" type="client" cache="false"/>
+	
+    <script src="draw/window.lua" type="client" cache="false"/>
+    <script src="draw/button.lua" type="client" cache="false"/>
+    <script src="draw/edit.lua" type="client" cache="false"/>
+    <script src="draw/scroll.lua" type="client" cache="false"/>
+    <script src="draw/checkbox.lua" type="client" cache="false"/>
+    <script src="draw/list.lua" type="client" cache="false"/>
+    <script src="draw/gridlist.lua" type="client" cache="false"/>
+    <script src="draw/progressbar.lua" type="client" cache="false"/>
+    <script src="draw/label.lua" type="client" cache="false"/>
+    <script src="draw/image.lua" type="client" cache="false"/>
+    <script src="draw/switchButton.lua" type="client" cache="false"/>
+    <script src="draw/tab.lua" type="client" cache="false"/>
+    <script src="draw/scrollpane.lua" type="client" cache="false"/>
+    <script src="draw/radiobutton.lua" type="client" cache="false"/>
+    <script src="draw/memo.lua" type="client" cache="false"/>
+
+
+    <script src="examples.lua" type="client" cache="false"/>
+
+    <file src='files/font/Basic-Regular.ttf' />
+    <file src='files/font/letterbold.otf' />
+    <file src='files/font/Comforta_regular.ttf' />
+    
+    <file src="files/fx/hud_mask.fx" />
+    <file src="files/fx/tex_matrix.fx" />
+    <file src="files/image/circle_mask.png" />
+    <file src="files/image/round.png" />
+    <file src="files/image/switch.png" />
+	
+    <!-- General -->
+
+        <export function="dxGetLibrary" type="client" />
+        <export function="dxGetScreen" type="client" />
+        <export function="dxSetProperty" type="client" />
+        <export function="dxGetProperty" type="client" />
+        <export function="dxSetText" type="client" />
+        <export function="dxSetTitle" type="client" />
+        <export function="dxSetVisible" type="client" />
+        <export function="dxSetDisabled" type="client" />
+        <export function="dxSetPosition" type="client" />
+        <export function="dxGetPosition" type="client" />
+        <export function="dxSetSize" type="client" />
+        <export function="dxGetSize" type="client" />
+        <export function="dxGetRootParent" type="client" />
+        <export function="dxSetColorBackground" type="client" />
+        <export function="dxSetColorText" type="client" />
+        <export function="dxSetColorSelected" type="client" />
+        <export function="dxSetColorBorder" type="client" />
+        <export function="dxFont" type="client" />
+        <export function="dxSetFont" type="client" />
+        <export function="dxSetTitle" type="client" />
+        <export function="dxGetTitle" type="client" />
+        <export function="dxGetText" type="client" />
+        <export function="dxSetTheme" type="client" />
+        <export function="dxSetPostGui" type="client" />
+        <export function="dxSetToFront" type="client" />
+        <export function="dxSetRounded" type="client" />
+        <export function="dxIsElementParent" type="client" />
+        <export function="dxSetParent" type="client" />
+        <export function="dxDuplicateElement" type="client" />
+        <export function="dxAddAnimation" type="client" />
+
+
+    <!--         -->
+
+    <!-- Window -->
+        <export function="dxWindow" type="client" />
+        <export function="dxWindowSetCloseState" type="client" />
+        <export function="dxWindowGetCloseState" type="client" />
+    <!--        -->
+
+    <!-- Button -->
+        <export function="dxButton" type="client" />
+
+    <!--        -->
+
+    <!-- checkBox -->
+        <export function="dxCheckBox" type="client" />
+        <export function="dxCheckBoxSetState" type="client" />
+        <export function="dxCheckBoxGetState" type="client" />
+    <!--          -->
+
+
+    <!-- Edit -->
+        <export function="dxEdit" type="client" />
+        <export function="dxEditSetMasked" type="client" />
+        <export function="dxEditSetMaxCharacters" type="client" />
+        <export function="dxActiveInput" type="client" />
+    <!--      -->
+
+    <!-- GridList -->
+        <export function="dxGridList" type="client" />
+        <export function="dxGridSetItemColor" type="client" />
+        <export function="dxGridListAddItem" type="client" />
+        <export function="dxGridListRemoveItem" type="client" />
+        <export function="dxGridListAddColumn" type="client" />
+        <export function="dxGridListRemoveColumn" type="client" />
+        <export function="dxGridListGetItemSelected" type="client" />
+        <export function="dxGridListSetItemSelected" type="client" />
+        <export function="dxGridListSetItemData" type="client" />
+        <export function="dxGridListGetItemData" type="client" />
+        <export function="dxGridListGetScrollHV" type="client" />
+        <export function="dxGridListClear" type="client" />
+        <export function="dxGridListFindItem" type="client" />
+         
+    <!--          -->
+
+    <!-- Image -->
+        <export function="dxImage" type="client" />
+        <export function="dxImageApplyMask" type="client" />
+        <export function="dxImageRemoveMask" type="client" />
+	    <export function="dxImageLoad" type="client" />
+    <!--       -->
+
+    <!-- Label -->
+        <export function="dxLabel" type="client" />
+    <!--       -->
+
+    <!-- List -->
+        <export function="dxList" type="client" />
+        <export function="dxListAddItem" type="client" />
+        <export function="dxListRemoveItem" type="client" />
+        <export function="dxListGetItemSelected" type="client" />
+        <export function="dxListSetItemSelected" type="client" />
+        <export function="dxListSetColorFilaItem" type="client" />
+    <!--      -->
+
+    <!-- Progressbar -->
+        <export function="dxProgressBar" type="client" />
+        <export function="dxProgressBarSetProgress" type="client" />
+        <export function="dxProgressBarGetProgress" type="client" />
+        <export function="dxProgressBarSetColor" type="client" />
+    <!--             -->
+
+    <!-- scroll -->
+        <export function="dxScroll" type="client" />
+        <export function="dxScrollGetCurrentPosition" type="client" />
+        <export function="dxScrollSetCurrentPosition" type="client" />
+        <export function="dxScrollSetColorButton" type="client" />
+        <export function="dxScrollSetVertical" type="client" />
+    <!--        -->
+
+    <!-- scrollpane -->
+        <export function="dxScrollPane" type="client" />
+    <!--            -->
+
+    <!-- tab -->
+        <export function="dxTabPanel" type="client" />
+        <export function="dxAddTab" type="client" />
+        <export function="dxTabPanelSetSelected" type="client" />
+        <export function="dxTabPanelGetSelected" type="client" />
+    <!--     -->
+
+    <!-- dxRadioButton -->
+        <export function="dxRadioButton" type="client" />
+        <export function="dxRadioButtonSetSelected" type="client" />
+        <export function="dxRadioButtonGetSelected" type="client" />
+    <!--               -->
+
+    <!-- dxSwitchButton -->
+        <export function="dxSwitchButton" type="client" />
+        <export function="dxSwitchButtonSetState" type="client" />
+        <export function="dxSwitchButtonGetState" type="client" />
+        <export function="dxSwitchButtonSetColorOn" type="client" />
+        <export function="dxSwitchButtonSetColorOff" type="client" />
+    <!--            -->
+
+    <!-- dxMemo -->
+        <export function="dxMemo" type="client" />
+        <export function="dxMemoSetReadOnly" type="client" />
+    <!--               -->
+</meta>

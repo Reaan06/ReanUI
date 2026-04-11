@@ -1,0 +1,18 @@
+<meta>
+    <info author="Reaan" type="script" name="ReanUI" version="1.0.0" />
+    
+    <!-- Core -->
+    <script src="src/ReanUI.lua" type="client" />
+    <script src="src/core/UIElement.lua" type="client" />
+    <script src="src/core/CSSProcessor.lua" type="client" />
+    <script src="src/renderer/Renderer.lua" type="client" />
+    <script src="src/theme/ThemeManager.lua" type="client" />
+    
+    <!-- Components -->
+    <script src="src/components/BaseComponent.lua" type="client" />
+    <script src="src/components/Button.lua" type="client" />
+    <script src="src/components/Container.lua" type="client" />
+    
+    <!-- Entry Point -->
+    <script src="main_demo.lua" type="client" />
+</meta>

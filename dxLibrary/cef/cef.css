@@ -1,0 +1,32 @@
+.baseElement {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0%;
+    left: 0%;
+    overflow: hidden;
+}
+
+::selection {
+    opacity: 0;
+}
+
+textarea {
+    resize: none;
+    overflow-y: auto;
+}
+
+textarea:focus { 
+    outline: none !important;
+}
+
+textarea[readonly]{
+	user-select: text;
+}
+
+
+textarea::selection{
+	opacity: 1;
+	background-color: #3498db;
+	color: #ffffff;
+}
